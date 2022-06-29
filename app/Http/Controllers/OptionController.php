@@ -16,14 +16,14 @@ class OptionController extends Controller
      */
     public function index()
     {
-        return view('back.pages.options',[
+        return view('back.layout.master',[
             'facebook'=>Options::getOption('facebook'),
             'twitter'=>Options::getOption('twitter'),
             'instagram'=>Options::getOption('instagram'),
             'youtube'=>Options::getOption('youtube'),
             'email'=>Options::getOption('email'),
             'tel'=>Options::getOption('tel'),
-            
+
         ]);
     }
 
@@ -116,4 +116,3 @@ class OptionController extends Controller
         //
     }
 }
-    

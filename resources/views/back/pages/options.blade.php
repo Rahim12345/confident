@@ -60,7 +60,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-            
+
                     <div class="form-group">
                         <button class="btn btn-primary float-end" type="submit">Əlavə et</button>
                     </div>
@@ -75,4 +75,3 @@
 
 @endsection
 
-    
