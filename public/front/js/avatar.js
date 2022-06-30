@@ -57,6 +57,7 @@ $(document).ready(function () {
                     let reader = new FileReader();
                     reader.onload = function () {
                         $("#nav-avatar").css("background-image", "url(" + reader.result + ")");
+                        $("#mobile-avatar").css("background-image", "url(" + reader.result + ")");
                         $("#profile-image").css("background-image", "url(" + reader.result + ")");
                     };
 

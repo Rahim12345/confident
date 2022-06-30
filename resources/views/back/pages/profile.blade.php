@@ -12,7 +12,7 @@
 
 @section('content')
     <div class="page">
-        @include('back.includes.menu')
+{{--        @include('back.includes.menu')--}}
         <input type="hidden" value="{{ route('front.avatar.upload') }}" id="profile_avatar_upload">
         <div class="container-xl mt-3">
             <div class="row row-cards">

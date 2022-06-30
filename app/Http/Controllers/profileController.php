@@ -66,7 +66,7 @@ class profileController extends Controller
                 'ypassword'=>'Yeni şifrə'
             ]);
 
-            User::whereId(auth()->user()->id)
+            $user = User::whereId(auth()->user()->id)
                 ->update([
                     'name'=>$request->name,
                     'password'=>bcrypt($request->ypassword)
@@ -74,12 +74,13 @@ class profileController extends Controller
         }
         else
         {
-            User::whereId(auth()->user()->id)
+            $user = User::whereId(auth()->user()->id)
                 ->update([
                     'name'=>$request->name,
                 ]);
         }
 
+        return response(User::whereId(auth()->user()->id)->first(),200);
 
 
     }

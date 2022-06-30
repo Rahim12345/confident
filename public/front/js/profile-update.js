@@ -21,9 +21,9 @@ $(document).ready(function () {
             },
             type : 'POST',
             url : url,
-            success : function () {
-                $('#top-name').html('').html(name.split(' ')[0].substring(0,16));
-                $('#sidebar-name').html('').html(name);
+            success : function (response) {
+                $('#top-name').html('').html(response.name);
+                $('#sidebar-name').html('').html(response.name);
                 toastr.success('Profile uğurla yeniəndi');
             },
             error : function (myErrors) {

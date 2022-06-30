@@ -27,25 +27,27 @@
             color: #656d77;
         }
     </style>
-{{--    @toastr_css--}}
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
     @yield('css')
 </head>
 <body class="antialiased theme-dark">
 <input type="hidden" value="{{ env('app_url') }}" id="rootUrl">
 
 <div class="page">
-    @include('back.includes.menu')
-    @include('back.includes.top')
+    <div class="page">
 
-    <div class="page-wrapper">
-        @yield('content')
+        @include('back.includes.aside')
+        @include('back.includes.header')
+        <div class="page-wrapper">
+            @yield('content')
+            @include('back.includes.footer')
+        </div>
     </div>
 </div>
 
 <script src="{{ asset('back/dist/js/tabler.min.js') }}"></script>
 <script src="{{ asset('jquery.min.js') }}"></script>
-{{--@toastr_js--}}
-{{--@toastr_render--}}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script><script type="text/javascript">toastr.options = {"closeButton":true,"closeClass":"toast-close-button","closeDuration":300,"closeEasing":"swing","closeHtml":"<button><i class=\"icon-off\"><\/i><\/button>","closeMethod":"fadeOut","closeOnHover":true,"containerId":"toast-container","debug":false,"escapeHtml":false,"extendedTimeOut":10000,"hideDuration":1000,"hideEasing":"linear","hideMethod":"fadeOut","iconClass":"toast-info","iconClasses":{"error":"toast-error","info":"toast-info","success":"toast-success","warning":"toast-warning"},"messageClass":"toast-message","newestOnTop":false,"onHidden":null,"onShown":null,"positionClass":"toast-top-right","preventDuplicates":true,"progressBar":true,"progressClass":"toast-progress","rtl":false,"showDuration":300,"showEasing":"swing","showMethod":"fadeIn","tapToDismiss":true,"target":"body","timeOut":5000,"titleClass":"toast-title","toastClass":"toast"};</script>
 @yield('js')
 </body>
 </html>
