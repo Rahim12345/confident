@@ -17,20 +17,21 @@
     <link href="{{ asset('back/dist/css/demo.min.css') }}" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
     <style>
-        .select2-container--default .select2-results__option--highlighted[aria-selected] {
-            background-color: yellowgreen;
+        .footer-transparent {
+            margin-top: 0;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #232E3C;
             color: white;
-        }
-
-        .select2-results ul li {
-            background-color: #1f2936;
-            color: #656d77;
+            text-align: center;
         }
     </style>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
     @yield('css')
 </head>
-<body class="antialiased theme-dark">
+<body class="antialiased theme-dark-auto">
 <input type="hidden" value="{{ env('app_url') }}" id="rootUrl">
 
 <div class="page">

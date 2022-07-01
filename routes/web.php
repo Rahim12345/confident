@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\HekimController;
+use App\Http\Controllers\KlinikaController;
+use App\Http\Controllers\MagazaController;
+use App\Http\Controllers\RayonController;
+use App\Http\Controllers\SeherController;
+use App\Http\Controllers\VezifeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -33,12 +39,17 @@ Route::post('profile',[ App\Http\Controllers\profileController::class,'profileUp
 
 Route::group(['prefix'=>'admin','middleware'=>['auth', 'locale']],function (){
 
-Route::get('/',[App\Http\Controllers\AdminController::class,'index'])
-    ->name('back.dashboard');
-Route::get('profile',[App\Http\Controllers\profileController::class,'profile'])
-    ->name('back.profile');
+    Route::get('/',[App\Http\Controllers\AdminController::class,'index'])
+        ->name('back.dashboard');
+    Route::get('profile',[App\Http\Controllers\profileController::class,'profile'])
+        ->name('back.profile');
 
-Route::resource('option',App\Http\Controllers\OptionController::class);
+    Route::resource('option',App\Http\Controllers\OptionController::class);
 
+    Route::resource('magaza', MagazaController::class);
+    Route::resource('vezife', VezifeController::class);
+    Route::resource('seher', SeherController::class);
+    Route::resource('rayon', RayonController::class);
+    Route::resource('klinika', KlinikaController::class);
+    Route::resource('hekim', HekimController::class);
 });
-            

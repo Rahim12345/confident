@@ -24,6 +24,7 @@ $(document).ready(function () {
             success : function (response) {
                 $('#top-name').html('').html(response.name);
                 $('#sidebar-name').html('').html(response.name);
+                $('#sidebar-name2').html('').html(response.name);
                 toastr.success('Profile uğurla yeniəndi');
             },
             error : function (myErrors) {

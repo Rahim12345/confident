@@ -20,11 +20,6 @@
                         <a href="." class="link-secondary">{{ config('app.name') }}</a>.
                         {{ __('static.butun_huquqlar_qorunur') }}
                     </li>
-                    <li class="list-inline-item">
-                        <a href="./changelog.html" class="link-secondary" rel="noopener">
-                            v1.0.0-beta10
-                        </a>
-                    </li>
                 </ul>
             </div>
         </div>

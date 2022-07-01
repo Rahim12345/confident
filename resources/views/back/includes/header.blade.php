@@ -103,7 +103,7 @@
                     <span class="avatar avatar-sm" id="nav-avatar" style="background-image: url({{ asset('avatars/'.auth()->user()->avatar) }})"></span>
                     <div class="d-none d-xl-block ps-2">
                         <div id="top-name">{{ auth()->user()->name }}</div>
-                        <div class="mt-1 small text-muted">UI Designer</div>
+                        <div class="mt-1 small text-muted">Müdir</div>
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
