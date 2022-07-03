@@ -24,7 +24,7 @@ class StoreVezifeRequest extends FormRequest
     public function rules()
     {
         return [
-            'ad'=>'required|max:200'
+            'ad'=>'required|max:200|unique:vezives,ad'
         ];
     }
 

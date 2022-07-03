@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HekimController;
+use App\Http\Controllers\IsciController;
 use App\Http\Controllers\KlinikaController;
 use App\Http\Controllers\MagazaController;
 use App\Http\Controllers\RayonController;
@@ -8,15 +9,10 @@ use App\Http\Controllers\SeherController;
 use App\Http\Controllers\VezifeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('front.home');
-
-
 Route::get('langs/{locale}',[App\Http\Controllers\profileController::class,'langSwitcher'])
         ->name('lang.swithcher');
 
-Route::get('daxil-ol',[App\Http\Controllers\sign\sign_in_upController::class,'login'])
+Route::get('/',[App\Http\Controllers\sign\sign_in_upController::class,'login'])
     ->middleware('locale')
     ->name('login');
 
@@ -52,4 +48,5 @@ Route::group(['prefix'=>'admin','middleware'=>['auth', 'locale']],function (){
     Route::resource('rayon', RayonController::class);
     Route::resource('klinika', KlinikaController::class);
     Route::resource('hekim', HekimController::class);
+    Route::resource('isci', IsciController::class);
 });

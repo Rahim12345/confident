@@ -17,7 +17,7 @@ class RayonController extends Controller
     public function index()
     {
         return view('back.pages.rayon.index',[
-            'rayons'=>Rayon::with('seher')->latest()->get()
+            'rayons'=>Rayon::with('seher')->orderBy('ad')->get()
         ]);
     }
 
@@ -29,12 +29,6 @@ class RayonController extends Controller
     public function create()
     {
         $sehers = Seher::latest()->get();
-        if ($sehers->count() == 0)
-        {
-            toastr()->warning('İlk öncə şəhər əlavə etməlisiz',env('xitab'));
-            return redirect()->route('seher.create');
-        }
-
         return view('back.pages.rayon.create',compact('sehers'));
     }
 
@@ -76,12 +70,6 @@ class RayonController extends Controller
     public function edit(Rayon $rayon)
     {
         $sehers = Seher::latest()->get();
-        if ($sehers->count() == 0)
-        {
-            toastr()->warning('İlk öncə şəhər əlavə etməlisiz',env('xitab'));
-            return redirect()->route('seher.create');
-        }
-
         return view('back.pages.rayon.edit',[
             'item'=>$rayon,
             'sehers'=>$sehers

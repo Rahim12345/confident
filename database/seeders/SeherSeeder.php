@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Seher;
 use Illuminate\Database\Seeder;
 
 class SeherSeeder extends Seeder
@@ -13,6 +14,16 @@ class SeherSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $sehers = [
+            'Bakı',
+            'Gəncə'
+        ];
+
+        foreach ($sehers as $seher)
+        {
+            Seher::create([
+                'ad'=>$seher
+            ]);
+        }
     }
 }

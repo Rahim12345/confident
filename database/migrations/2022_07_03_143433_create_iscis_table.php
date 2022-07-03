@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHekimsTable extends Migration
+class CreateIscisTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreateHekimsTable extends Migration
      */
     public function up()
     {
-        Schema::create('hekims', function (Blueprint $table) {
+        Schema::create('iscis', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('magaza_id')->nullable();
+            $table->unsignedBigInteger('vezife_id')->nullable();
             $table->string('ad')->nullable();
-            $table->unsignedBigInteger('klinika_id')->nullable();
+            $table->string('email');
+            $table->string('password');
             $table->date('dogum_gunu')->nullable();
             $table->string('tel_1')->nullable();
             $table->string('tel_2')->nullable();
@@ -25,8 +28,7 @@ class CreateHekimsTable extends Migration
             $table->string('insta')->nullable();
             $table->string('telegram')->nullable();
             $table->string('wp')->nullable();
-            $table->string('email')->nullable();
-            $table->integer('order_no')->default(0);
+//            $table->string('email')->nullable();
             $table->timestamps();
         });
     }
@@ -38,6 +40,6 @@ class CreateHekimsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hekims');
+        Schema::dropIfExists('iscis');
     }
 }

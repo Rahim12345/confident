@@ -24,7 +24,7 @@ class StoreMagazaRequest extends FormRequest
     public function rules()
     {
         return [
-            'ad'=>'required|max:200'
+            'ad'=>'required|max:200|unique:magazas,ad'
         ];
     }
 

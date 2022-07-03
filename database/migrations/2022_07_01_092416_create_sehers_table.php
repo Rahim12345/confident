@@ -16,6 +16,7 @@ class CreateSehersTable extends Migration
         Schema::create('sehers', function (Blueprint $table) {
             $table->id();
             $table->string('ad')->nullable();
+            $table->integer('order_no')->default(0);
             $table->timestamps();
         });
     }

@@ -31,17 +31,18 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
     @yield('css')
 </head>
-<body class="antialiased theme-dark-auto">
+<body class="antialiased">
 <input type="hidden" value="{{ env('app_url') }}" id="rootUrl">
 
 <div class="page">
-    <div class="page">
-
         @include('back.includes.aside')
         @include('back.includes.header')
+    <div class="content">
+        <div class="container-xl">
         <div class="page-wrapper">
             @yield('content')
             @include('back.includes.footer')
+        </div>
         </div>
     </div>
 </div>

@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UpdateMagazaRequest extends FormRequest
 {
@@ -21,10 +23,16 @@ class UpdateMagazaRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
         return [
-            'ad'=>'required|max:200'
+            'ad'=>[
+                'required',
+                'max:200',
+                Rule::unique('magazas','ad')->where(function ($query) use ($request) {
+                    return $query->where('id','!=',$request->id);
+                })
+            ],
         ];
     }
 

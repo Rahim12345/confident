@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSeherRequest extends FormRequest
+class StoreIsciRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class StoreSeherRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,14 +24,7 @@ class StoreSeherRequest extends FormRequest
     public function rules()
     {
         return [
-            'ad'=>'required|max:200|unique:sehers,ad'
-        ];
-    }
-
-    public function attributes()
-    {
-        return [
-            'ad'=>'Ad'
+            //
         ];
     }
 }

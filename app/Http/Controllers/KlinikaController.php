@@ -6,6 +6,8 @@ use App\Models\Klinika;
 use App\Http\Requests\StoreKlinikaRequest;
 use App\Http\Requests\UpdateKlinikaRequest;
 use App\Models\Rayon;
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class KlinikaController extends Controller
 {
@@ -14,11 +16,44 @@ class KlinikaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('back.pages.klinika.index',[
-            'klinikas'=>Klinika::with('rayon')->latest()->get()
-        ]);
+        if($request->ajax())
+        {
+            $data = Klinika::with('rayon')
+                ->latest()
+                ->get();
+
+            return DataTables::of($data)
+
+                ->addColumn('rayon',function ($row){
+                    return $row->rayon ? $row->rayon->ad : '';
+                })
+
+                ->addColumn('action',function ($row){
+                    return '
+                    <div class="btn-list flex-nowrap">
+                        <a href="'.route('klinika.edit',$row->id).'" class="btn btn-primary">
+                            <i class="fa fa-pen"></i>
+                        </a>
+                        <div class="">
+                            <form action="'.route('klinika.destroy',$row->id).'" method="POST">
+                                '.csrf_field().'
+                                '.method_field('DELETE').'
+                                <button class="btn btn-danger" type="submit" onclick="return confirm(\'Silmek istədiyinizdən əminsiniz?\')"><i class="fa fa-times"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                    ';
+                })
+
+                ->rawColumns(['rayon','xerite','action'])
+
+                ->make(true);
+        }
+
+
+        return view('back.pages.klinika.index');
     }
 
     /**
@@ -49,6 +84,16 @@ class KlinikaController extends Controller
         Klinika::create([
             'ad'=>$request->ad,
             'hekim_adi'=>$request->hekim_adi,
+            'kuce_adi'=>$request->kuce_adi,
+            'xerite'=>$request->xerite,
+            'tel_1'=>$request->tel_1,
+            'tel_2'=>$request->tel_2,
+            'tel_3'=>$request->tel_3,
+            'fb'=>$request->fb,
+            'insta'=>$request->insta,
+            'telegram'=>$request->telegram,
+            'wp'=>$request->wp,
+            'email'=>$request->email,
             'rayon_id'=>$request->rayon_id,
         ]);
 
@@ -98,6 +143,16 @@ class KlinikaController extends Controller
         $klinika->update([
             'ad'=>$request->ad,
             'hekim_adi'=>$request->hekim_adi,
+            'kuce_adi'=>$request->kuce_adi,
+            'xerite'=>$request->xerite,
+            'tel_1'=>$request->tel_1,
+            'tel_2'=>$request->tel_2,
+            'tel_3'=>$request->tel_3,
+            'fb'=>$request->fb,
+            'insta'=>$request->insta,
+            'telegram'=>$request->telegram,
+            'wp'=>$request->wp,
+            'email'=>$request->email,
             'rayon_id'=>$request->rayon_id,
         ]);
 

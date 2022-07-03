@@ -24,8 +24,8 @@ class StoreRayonRequest extends FormRequest
     public function rules()
     {
         return [
-            'ad'=>'required|max:200',
-            'seher_id'=>'required|exists:sehers,id'
+            'ad'=>'required|max:200|unique:rayons,ad',
+            'seher_id'=>'nullable|exists:sehers,id'
         ];
     }
 

@@ -38,7 +38,7 @@
                                     <div>{{ $item->ad }}</div>
                                 </td>
                                 <td data-label="Şəhər" >
-                                    <div>{{ $item->seher->ad }}</div>
+                                    <div>{{ $item->seher ? $item->seher->ad : '' }}</div>
                                 </td>
                                 <td>
                                     <div class="btn-list flex-nowrap">

@@ -25,7 +25,7 @@
                     <select name="seher_id" id="seher_id" class="form-control @error('seher_id') is-invalid  @enderror">
                         <option value="">Birini seçin</option>
                         @foreach($sehers as $seher)
-                            <option value="{{ $seher->id }}" {{ old('seher_id',$item->seher->id) == $seher->id ? 'selected' : '' }}>{{ $seher->ad }}</option>
+                            <option value="{{ $seher->id }}" {{ old('seher_id',$item->seher ? $item->seher->id : '') == $seher->id ? 'selected' : '' }}>{{ $seher->ad }}</option>
                         @endforeach
                     </select>
                     @error('seher_id')

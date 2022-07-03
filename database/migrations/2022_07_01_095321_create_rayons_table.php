@@ -15,14 +15,10 @@ class CreateRayonsTable extends Migration
     {
         Schema::create('rayons', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('seher_id');
+            $table->unsignedBigInteger('seher_id')->nullable();
             $table->string('ad')->nullable();
+            $table->integer('order_no')->default(0);
             $table->timestamps();
-
-            $table->foreign('seher_id')
-                ->references('id')
-                ->on('sehers')
-                ->onDelete('cascade');
         });
     }
 

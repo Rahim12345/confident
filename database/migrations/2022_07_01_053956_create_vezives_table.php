@@ -16,6 +16,7 @@ class CreateVezivesTable extends Migration
         Schema::create('vezives', function (Blueprint $table) {
             $table->id();
             $table->string('ad')->nullable();
+            $table->integer('order_no')->default(0);
             $table->timestamps();
         });
     }

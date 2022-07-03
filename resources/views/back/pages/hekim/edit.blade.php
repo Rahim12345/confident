@@ -7,40 +7,101 @@
 @endsection
 
 @section('content')
-    <div class="content m-3">
-        <div class="mb-3 col-md-8 offset-md-2">
-            <a href="{{ route('klinika.index') }}" class="btn btn-primary w-100">Bütün</a>
-            <form action="{{ route('klinika.update',$klinika->id) }}" method="POST">
+    <div class="content" style="margin-bottom: 100px">
+        <div class="mb-3 col-md-12">
+            @if($errors->any())
+                {{ implode('', $errors->all('<div>:message</div>')) }}
+            @endif
+            <a href="{{ route('hekim.index') }}" class="btn btn-primary w-100">Bütün</a>
+            <form action="{{ route('hekim.update',$hekim->id) }}" method="POST">
                 @csrf
                 @method('PUT')
-                <div class="form-group mb-3">
-                    <label class="form-label" for="ad">Ad(Klinika)</label>
-                    <input type="text" class="form-control @error('ad') is-invalid  @enderror" id="ad" name="ad" value="{{ old('ad',$klinika->ad) }}">
-                    @error('ad')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-group mb-3">
-                    <label class="form-label" for="hekim_adi">Ad(Həkim)</label>
-                    <input type="text" class="form-control @error('hekim_adi') is-invalid  @enderror" id="hekim_adi" name="hekim_adi" value="{{ old('hekim_adi',$klinika->hekim_adi) }}">
-                    @error('hekim_adi')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-group mb-3">
-                    <label class="form-label" for="rayon_id">Rayon</label>
-                    <select name="rayon_id" id="rayon_id" class="form-control @error('rayon_id') is-invalid  @enderror">
-                        <option value="">Birini seçin</option>
-                        @foreach($rayons as $rayon)
-                            <option value="{{ $rayon->id }}" {{ old('rayon_id',$klinika->rayon_id) == $rayon->id ? 'selected' : '' }}>{{ $rayon->ad }}</option>
-                        @endforeach
-                    </select>
-                    @error('rayon_id')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-primary float-end" type="submit">Redaktə et</button>
+                <div class="row">
+                    <div class="form-group mb-3 col-md-4">
+                        <label class="form-label" for="ad">A.S.A</label>
+                        <input type="text" class="form-control @error('ad') is-invalid  @enderror" id="ad" name="ad" value="{{ old('ad',$hekim->ad) }}">
+                        @error('ad')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3 col-md-4">
+                        <label class="form-label" for="dogum_gunu">Doğum tarixi</label>
+                        <input type="date" class="form-control @error('dogum_gunu') is-invalid  @enderror" id="dogum_gunu" name="dogum_gunu" value="{{ old('dogum_gunu',$hekim->dogum_gunu) }}">
+                        @error('dogum_gunu')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3 col-md-4">
+                        <label class="form-label" for="klinika_id">Klinika</label>
+                        <select name="klinika_id" id="klinika_id" class="form-control @error('klinika_id') is-invalid  @enderror">
+                            <option value="">Birini seçin</option>
+                            @foreach($klinikas as $klinika)
+                                <option value="{{ $klinika->id }}" {{ old('klinika_id',$hekim->id) == $klinika->id ? 'selected' : '' }}>{{ $klinika->ad == '' ? $klinika->hekim_adi : $klinika->ad }}</option>
+                            @endforeach
+                        </select>
+                        @error('klinika_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3 col-md-4">
+                        <label class="form-label" for="tel_1">Telefon 1</label>
+                        <input type="text" class="form-control @error('tel_1') is-invalid  @enderror" id="tel_1" name="tel_1" value="{{ old('tel_1',$hekim->tel_1) }}">
+                        @error('tel_1')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3 col-md-4">
+                        <label class="form-label" for="tel_2">Telefon 2</label>
+                        <input type="text" class="form-control @error('tel_2') is-invalid  @enderror" id="tel_2" name="tel_2" value="{{ old('tel_2',$hekim->tel_2) }}">
+                        @error('tel_2')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3 col-md-4">
+                        <label class="form-label" for="tel_3">Telefon 3</label>
+                        <input type="text" class="form-control @error('tel_3') is-invalid  @enderror" id="tel_3" name="tel_3" value="{{ old('tel_3',$hekim->tel_3) }}">
+                        @error('tel_3')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3 col-md-4">
+                        <label class="form-label" for="fb">Facebook</label>
+                        <input type="text" class="form-control @error('fb') is-invalid  @enderror" id="fb" name="fb" value="{{ old('fb',$hekim->fb) }}">
+                        @error('fb')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3 col-md-4">
+                        <label class="form-label" for="insta">Instagram</label>
+                        <input type="text" class="form-control @error('insta') is-invalid  @enderror" id="insta" name="insta" value="{{ old('insta',$hekim->insta) }}">
+                        @error('insta')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3 col-md-4">
+                        <label class="form-label" for="telegram">Telegram</label>
+                        <input type="text" class="form-control @error('telegram') is-invalid  @enderror" id="telegram" name="telegram" value="{{ old('telegram',$hekim->telegram) }}">
+                        @error('telegram')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3 col-md-4">
+                        <label class="form-label" for="wp">Whatsapp</label>
+                        <input type="text" class="form-control @error('wp') is-invalid  @enderror" id="wp" name="wp" value="{{ old('wp',$hekim->wp) }}">
+                        @error('wp')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3 col-md-8">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="text" class="form-control @error('email') is-invalid  @enderror" id="email" name="email" value="{{ old('email',$hekim->email) }}">
+                        @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary float-end" type="submit">Redaktə et</button>
+                    </div>
                 </div>
             </form>
         </div>

@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UpdateRayonRequest extends FormRequest
 {
@@ -21,11 +23,17 @@ class UpdateRayonRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
         return [
-            'ad'=>'required|max:200',
-            'seher_id'=>'required|exists:sehers,id'
+            'ad'=>[
+                'required',
+                'max:200',
+                Rule::unique('rayons','ad')->where(function ($query) use ($request) {
+                    return $query->where('id','!=',$request->id);
+                })
+            ],
+            'seher_id'=>'nullable|exists:sehers,id'
         ];
     }
 
