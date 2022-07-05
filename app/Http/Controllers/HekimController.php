@@ -6,6 +6,7 @@ use App\Models\Hekim;
 use App\Http\Requests\StoreHekimRequest;
 use App\Http\Requests\UpdateHekimRequest;
 use App\Models\Klinika;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -20,7 +21,7 @@ class HekimController extends Controller
     {
         if($request->ajax())
         {
-            $data = Hekim::with('klinika')
+            $data = User::with('klinika')
                 ->latest()
                 ->get();
 
@@ -122,8 +123,8 @@ class HekimController extends Controller
      */
     public function store(StoreHekimRequest $request)
     {
-        Hekim::create([
-            'ad'=>$request->ad,
+        User::create([
+            'name'=>$request->ad,
             'klinika_id'=>$request->klinika_id,
             'dogum_gunu'=>$request->dogum_gunu,
             'tel_1'=>$request->tel_1,
@@ -133,7 +134,9 @@ class HekimController extends Controller
             'insta'=>$request->insta,
             'telegram'=>$request->telegram,
             'wp'=>$request->wp,
-            'email'=>$request->email
+            'email'=>$request->has('status') ? $request->email : null,
+            'password'=>$request->has('status') ? bcrypt($request->password) : null,
+            'status'=>$request->has('status') ? 1 : 0
         ]);
 
         toastr()->success('Əlavə edildi',env('xitab'));
@@ -158,7 +161,7 @@ class HekimController extends Controller
      * @param  \App\Models\Hekim  $hekim
      * @return \Illuminate\Http\Response
      */
-    public function edit(Hekim $hekim)
+    public function edit(User $hekim)
     {
         $klinikas = Klinika::latest()->get();
         if ($klinikas->count() == 0)
@@ -177,7 +180,7 @@ class HekimController extends Controller
      * @param  \App\Models\Hekim  $hekim
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateHekimRequest $request, Hekim $hekim)
+    public function update(UpdateHekimRequest $request, User $hekim)
     {
         $hekim->update([
             'ad'=>$request->ad,

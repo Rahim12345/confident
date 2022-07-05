@@ -9,9 +9,6 @@
 @section('content')
     <div class="content" style="margin-bottom: 100px">
         <div class="mb-3 col-md-12">
-            @if($errors->any())
-                {{ implode('', $errors->all('<div>:message</div>')) }}
-            @endif
             <a href="{{ route('hekim.index') }}" class="btn btn-primary w-100">Bütün</a>
             <form action="{{ route('hekim.update',$hekim->id) }}" method="POST">
                 @csrf
@@ -19,7 +16,7 @@
                 <div class="row">
                     <div class="form-group mb-3 col-md-4">
                         <label class="form-label" for="ad">A.S.A</label>
-                        <input type="text" class="form-control @error('ad') is-invalid  @enderror" id="ad" name="ad" value="{{ old('ad',$hekim->ad) }}">
+                        <input type="text" class="form-control @error('ad') is-invalid  @enderror" id="ad" name="ad" value="{{ old('ad',$hekim->name) }}">
                         @error('ad')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -36,7 +33,7 @@
                         <select name="klinika_id" id="klinika_id" class="form-control @error('klinika_id') is-invalid  @enderror">
                             <option value="">Birini seçin</option>
                             @foreach($klinikas as $klinika)
-                                <option value="{{ $klinika->id }}" {{ old('klinika_id',$hekim->id) == $klinika->id ? 'selected' : '' }}>{{ $klinika->ad == '' ? $klinika->hekim_adi : $klinika->ad }}</option>
+                                <option value="{{ $klinika->id }}" {{ old('klinika_id',$hekim->klinika_id) == $klinika->id ? 'selected' : '' }}>{{ $klinika->ad == '' ? $klinika->hekim_adi : $klinika->ad }}</option>
                             @endforeach
                         </select>
                         @error('klinika_id')
@@ -92,10 +89,29 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="form-group mb-3 col-md-8">
+
+                    <div class="form-group mb-3 col-md-4 specialAreas" style="display: {{ old('status',$hekim->status) ? 'block' : 'none' }}">
                         <label class="form-label" for="email">Email</label>
                         <input type="text" class="form-control @error('email') is-invalid  @enderror" id="email" name="email" value="{{ old('email',$hekim->email) }}">
                         @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group mb-3 col-md-4 specialAreas" style="display: {{ old('status',$hekim->status) ? 'block' : 'none' }}">
+                        <label class="form-label" for="password">Şifrə</label>
+                        <input type="text" class="form-control @error('password') is-invalid  @enderror" id="password" name="password" value="{{ old('password') }}">
+                        @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <hr>
+                    <div class="form-group mb-3 col-md-8">
+                        <label class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="status" id="status" {{ old('status',$hekim->status) == '1' ? 'checked' : '' }}>
+                            <span class="form-check-label">İşçi kimi də əlavə et</span>
+                        </label>
+                        @error('status')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>

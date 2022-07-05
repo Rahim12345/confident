@@ -116,17 +116,17 @@
                     url: "{{ route('hekim.index') }}",
                 },
                 columns: [
-                    {data: 'ad', name: 'ad'},
+                    {data: 'name', name: 'name'},
                     {data: 'seher', name: 'seher'},
                     {data: 'rayon', name: 'rayon'},
                     {data: 'klinika', name: 'klinika'},
                     {data: 'action', name: 'action',searchable:false,orderable: false},
                 ],
                 createdRow: function( row, data, dataIndex ) {
-                    $( row ).find('td:eq(0)').attr('data-label', 'AD(KLİNİKA)');
-                    $( row ).find('td:eq(1)').attr('data-label', 'AD(HƏKİM)');
+                    $( row ).find('td:eq(0)').attr('data-label', 'A.S.A');
+                    $( row ).find('td:eq(1)').attr('data-label', 'Şəhər');
                     $( row ).find('td:eq(2)').attr('data-label', 'RAYON');
-                    $( row ).find('td:eq(3)').attr('data-label', 'XƏRİTƏ');
+                    $( row ).find('td:eq(3)').attr('data-label', 'Klinika');
                     $( row ).find('td:eq(4)').attr('data-label', 'Action');
                 },
                 "language": {

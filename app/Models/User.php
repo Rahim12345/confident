@@ -21,6 +21,17 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar',
+        'klinika_id',
+        'dogum_gunu',
+        'tel_1',
+        'tel_2',
+        'tel_3',
+        'fb',
+        'insta',
+        'telegram',
+        'wp',
+        'status'
     ];
 
     /**
@@ -41,4 +52,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function klinika()
+    {
+        return $this->hasOne(Klinika::class,'id','klinika_id');
+    }
 }

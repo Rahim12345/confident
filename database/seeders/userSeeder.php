@@ -18,7 +18,8 @@ class userSeeder extends Seeder
             'name'=>'Admin',
             'email'=>'admin@gmail.com',
             'avatar'=>'avatar.jpg',
-            'password'=>bcrypt(12345678)
+            'password'=>bcrypt(12345678),
+            'status'=>1
         ]);
     }
 }

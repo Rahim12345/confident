@@ -88,13 +88,32 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="form-group mb-3 col-md-8">
+                    <div class="form-group mb-3 col-md-4 specialAreas" style="display: {{ old('status') ? 'block' : 'none' }}">
                         <label class="form-label" for="email">Email</label>
                         <input type="text" class="form-control @error('email') is-invalid  @enderror" id="email" name="email" value="{{ old('email') }}">
                         @error('email')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <div class="form-group mb-3 col-md-4 specialAreas" style="display: {{ old('status') ? 'block' : 'none' }}">
+                        <label class="form-label" for="password">Şifrə</label>
+                        <input type="text" class="form-control @error('password') is-invalid  @enderror" id="password" name="password" value="{{ old('password') }}">
+                        @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <hr>
+                    <div class="form-group mb-3 col-md-8">
+                        <label class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="status" id="status" {{ old('status') ? 'checked' : '' }}>
+                            <span class="form-check-label">İşçi kimi də əlavə et</span>
+                        </label>
+                        @error('status')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <div class="form-group">
                         <button class="btn btn-primary float-end" type="submit">Əlavə et</button>
                     </div>
@@ -105,5 +124,16 @@
 @endsection
 
 @section('js')
-
+    <script>
+        $(document).ready(function () {
+            $('#status').change(function () {
+                if($(this).is(':checked')){
+                    $('.specialAreas').css('display','block');
+                }
+                else{
+                    $('.specialAreas').css('display','none');
+                }
+            });
+        });
+    </script>
 @endsection

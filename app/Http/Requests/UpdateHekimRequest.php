@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class UpdateHekimRequest extends FormRequest
 {
@@ -21,7 +22,7 @@ class UpdateHekimRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
         return [
             'ad'=>'required|max:200',
@@ -34,7 +35,8 @@ class UpdateHekimRequest extends FormRequest
             'insta'=>'nullable|max:200',
             'telegram'=>'nullable|max:200',
             'wp'=>'nullable|max:200',
-            'email'=>'nullable|max:200',
+            'email'=>$request->has('status') ? 'required|max:200' : 'nullable|max:200',
+            'password'=>$request->has('status') ? 'required|max:200' : 'nullable|max:200',
         ];
     }
 
@@ -52,6 +54,7 @@ class UpdateHekimRequest extends FormRequest
             'telegram'=>'Telegram',
             'wp'=>'Whatsapp',
             'email'=>'Email',
+            'password'=>'Şifrə',
         ];
     }
 }
