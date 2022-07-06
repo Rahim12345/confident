@@ -6,7 +6,9 @@ use App\Models\Hekim;
 use App\Http\Requests\StoreHekimRequest;
 use App\Http\Requests\UpdateHekimRequest;
 use App\Models\Klinika;
+use App\Models\Magaza;
 use App\Models\User;
+use App\Models\Vezife;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -105,14 +107,28 @@ class HekimController extends Controller
      */
     public function create()
     {
-        $klinikas = Klinika::latest()->get();
+        $klinikas   = Klinika::latest()->get();
+        $vezifes    = Vezife::latest()->get();
+        $magazas    = Magaza::latest()->get();
         if ($klinikas->count() == 0)
         {
             toastr()->warning('İlk öncə klinika əlavə etməlisiz',env('xitab'));
             return redirect()->route('klinika.create');
         }
 
-        return view('back.pages.hekim.create',compact('klinikas'));
+        if ($vezifes->count() == 0)
+        {
+            toastr()->warning('İlk öncə vəzifə əlavə etməlisiz',env('xitab'));
+            return redirect()->route('vezife.create');
+        }
+
+        if ($magazas->count() == 0)
+        {
+            toastr()->warning('İlk öncə mağaza əlavə etməlisiz',env('xitab'));
+            return redirect()->route('magaza.create');
+        }
+
+        return view('back.pages.hekim.create',compact('klinikas','vezifes','magazas'));
     }
 
     /**
@@ -163,14 +179,28 @@ class HekimController extends Controller
      */
     public function edit(User $hekim)
     {
-        $klinikas = Klinika::latest()->get();
+        $klinikas   = Klinika::latest()->get();
+        $vezifes    = Vezife::latest()->get();
+        $magazas    = Magaza::latest()->get();
         if ($klinikas->count() == 0)
         {
             toastr()->warning('İlk öncə klinika əlavə etməlisiz',env('xitab'));
             return redirect()->route('klinika.create');
         }
 
-        return view('back.pages.hekim.edit',compact('klinikas','hekim'));
+        if ($vezifes->count() == 0)
+        {
+            toastr()->warning('İlk öncə vəzifə əlavə etməlisiz',env('xitab'));
+            return redirect()->route('vezife.create');
+        }
+
+        if ($magazas->count() == 0)
+        {
+            toastr()->warning('İlk öncə mağaza əlavə etməlisiz',env('xitab'));
+            return redirect()->route('magaza.create');
+        }
+
+        return view('back.pages.hekim.edit',compact('klinikas','vezifes','hekim','magazas'));
     }
 
     /**

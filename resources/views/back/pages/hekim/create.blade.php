@@ -88,7 +88,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="form-group mb-3 col-md-4 specialAreas" style="display: {{ old('status') ? 'block' : 'none' }}">
+                    <div class="form-group mb-3 col-md-4">
                         <label class="form-label" for="email">Email</label>
                         <input type="text" class="form-control @error('email') is-invalid  @enderror" id="email" name="email" value="{{ old('email') }}">
                         @error('email')
@@ -100,6 +100,30 @@
                         <label class="form-label" for="password">Şifrə</label>
                         <input type="text" class="form-control @error('password') is-invalid  @enderror" id="password" name="password" value="{{ old('password') }}">
                         @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group mb-3 col-md-6 specialAreas" style="display: {{ old('status') ? 'block' : 'none' }}">
+                        <label class="form-label" for="vezife_id">Vəzifə</label>
+                        <select name="vezife_id" id="vezife_id" class="form-control @error('vezife_id') is-invalid  @enderror">
+                            @foreach($vezifes as $vezife)
+                                <option value="{{ $vezife->id }}" {{ old('vezife_id') == $vezife->id ? 'selected' : '' }}>{{ $vezife->ad }}</option>
+                            @endforeach
+                        </select>
+                        @error('vezife_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group mb-3 col-md-6 specialAreas" style="display: {{ old('status') ? 'block' : 'none' }}">
+                        <label class="form-label" for="magaza_id">Mağaza</label>
+                        <select name="magaza_id" id="magaza_id" class="form-control @error('magaza_id') is-invalid  @enderror">
+                            @foreach($magazas as $magaza)
+                                <option value="{{ $magaza->id }}" {{ old('magaza_id') == $magaza->id ? 'selected' : '' }}>{{ $magaza->ad }}</option>
+                            @endforeach
+                        </select>
+                        @error('magaza_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>

@@ -23,6 +23,8 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
 
             $table->unsignedBigInteger('klinika_id')->nullable();
+            $table->unsignedBigInteger('vezife_id')->nullable();
+            $table->unsignedBigInteger('magaza_id')->nullable();
             $table->date('dogum_gunu')->nullable();
             $table->string('tel_1')->nullable();
             $table->string('tel_2')->nullable();

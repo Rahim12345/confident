@@ -23,6 +23,8 @@ class User extends Authenticatable
         'password',
         'avatar',
         'klinika_id',
+        'vezife_id',
+        'magaza_id',
         'dogum_gunu',
         'tel_1',
         'tel_2',

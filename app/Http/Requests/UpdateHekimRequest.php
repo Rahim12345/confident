@@ -35,8 +35,10 @@ class UpdateHekimRequest extends FormRequest
             'insta'=>'nullable|max:200',
             'telegram'=>'nullable|max:200',
             'wp'=>'nullable|max:200',
-            'email'=>$request->has('status') ? 'required|max:200' : 'nullable|max:200',
+            'email'=>$request->has('status') ? 'required|email|max:200' : 'nullable|email|max:200',
             'password'=>$request->has('status') ? 'required|max:200' : 'nullable|max:200',
+            'vezife_id'=>$request->has('status') ? 'required|exists:vezives,id' : 'nullable|exists:vezives,id',
+            'magaza_id'=>$request->has('status') ? 'required|exists:magazas,id' : 'nullable|exists:magazas,id',
         ];
     }
 
@@ -55,6 +57,8 @@ class UpdateHekimRequest extends FormRequest
             'wp'=>'Whatsapp',
             'email'=>'Email',
             'password'=>'Şifrə',
+            'vezife_id'=>'Vəzifə',
+            'magaza_id'=>'Mağaza',
         ];
     }
 }
