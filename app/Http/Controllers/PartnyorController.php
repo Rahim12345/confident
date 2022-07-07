@@ -15,7 +15,8 @@ class PartnyorController extends Controller
      */
     public function index()
     {
-        //
+        $partnyors = Partnyor::latest()->get();
+        return view('back.pages.partnyor.index',compact('partnyors'));
     }
 
     /**
@@ -25,7 +26,7 @@ class PartnyorController extends Controller
      */
     public function create()
     {
-        //
+        return view('back.pages.partnyor.create');
     }
 
     /**

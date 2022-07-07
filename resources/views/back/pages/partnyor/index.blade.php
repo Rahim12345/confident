@@ -1,6 +1,6 @@
 @extends('back.layout.master')
 
-@section('title') Vəzifə @endsection
+@section('title') Partnyorlar @endsection
 
 @section('css')
 

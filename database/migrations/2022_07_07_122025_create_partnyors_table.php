@@ -15,6 +15,16 @@ class CreatePartnyorsTable extends Migration
     {
         Schema::create('partnyors', function (Blueprint $table) {
             $table->id();
+            $table->string('ad')->nullable();
+            $table->string('tel_1')->nullable();
+            $table->string('tel_2')->nullable();
+            $table->string('tel_3')->nullable();
+            $table->string('fb')->nullable();
+            $table->string('insta')->nullable();
+            $table->string('telegram')->nullable();
+            $table->string('wp')->nullable();
+            $table->string('email')->nullable();
+            $table->string('unvan')->nullable();
             $table->timestamps();
         });
     }
