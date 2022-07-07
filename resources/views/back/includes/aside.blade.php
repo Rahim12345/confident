@@ -171,7 +171,10 @@
                                     Klinikalar
                                 </a>
                                 <a class="dropdown-item" href="{{ route('hekim.index') }}">
-                                    Həkimlər
+                                    Həkimlər & İşçilər
+                                </a>
+                                <a class="dropdown-item" href="{{ route('partnyor.index') }}">
+                                    Partnyorlar
                                 </a>
                             </div>
                         </div>

@@ -5,6 +5,7 @@ use App\Http\Controllers\HekimVezifeController;
 use App\Http\Controllers\IsciController;
 use App\Http\Controllers\KlinikaController;
 use App\Http\Controllers\MagazaController;
+use App\Http\Controllers\PartnyorController;
 use App\Http\Controllers\RayonController;
 use App\Http\Controllers\SeherController;
 use App\Http\Controllers\VezifeController;
@@ -51,4 +52,5 @@ Route::group(['prefix'=>'admin','middleware'=>['auth', 'locale']],function (){
     Route::resource('klinika', KlinikaController::class);
     Route::resource('hekim', HekimController::class);
     Route::resource('isci', IsciController::class);
+    Route::resource('partnyor', PartnyorController::class);
 });
