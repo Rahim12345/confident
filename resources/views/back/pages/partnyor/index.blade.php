@@ -23,12 +23,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @if($vezifes->count() == 0)
+                            @if($partnyors->count() == 0)
                                 <tr>
                                     <td colspan="3" align="center">Məlumat tapılmadı</td>
                                 </tr>
                             @endif
-                            @foreach($vezifes as $item)
+                            @foreach($partnyors as $item)
                             <tr>
                                 <td data-label="#" >
                                     {{ $loop->iteration }}

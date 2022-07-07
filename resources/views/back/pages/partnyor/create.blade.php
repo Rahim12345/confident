@@ -9,9 +9,10 @@
 @section('content')
     <div class="content m-3">
         <div class="mb-3 col-md-8 offset-md-2">
-            <a href="{{ route('vezife.index') }}" class="btn btn-primary w-100">Bütün</a>
-            <form action="{{ route('vezife.store') }}" method="POST">
+            <a href="{{ route('partnyor.index') }}" class="btn btn-primary w-100">Bütün</a>
+            <form action="{{ route('partnyor.store') }}" method="POST">
                 @csrf
+                <div class="row">
                 <div class="form-group mb-3">
                     <label class="form-label" for="ad">Ad</label>
                     <input type="text" class="form-control @error('ad') is-invalid  @enderror" id="ad" name="ad" value="{{ old('ad') }}">
@@ -76,11 +77,12 @@
                     @enderror
                 </div>
                 <div class="form-group mb-3 col-md-4">
-                    <label class="form-label" for="unvan">Unvan</label>
+                    <label class="form-label" for="unvan">Ünvan</label>
                     <input type="text" class="form-control @error('unvan') is-invalid  @enderror" id="unvan" name="unvan" value="{{ old('unvan') }}">
                     @error('unvan')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                </div>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-primary float-end" type="submit">Əlavə et</button>

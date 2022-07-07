@@ -37,7 +37,22 @@ class PartnyorController extends Controller
      */
     public function store(StorePartnyorRequest $request)
     {
-        //
+        Partnyor::create([
+            'ad'=>$request->ad,
+            'tel_1'=>$request->tel_1,
+            'tel_2'=>$request->tel_2,
+            'tel_3'=>$request->tel_3,
+            'fb'=>$request->fb,
+            'insta'=>$request->insta,
+            'telegram'=>$request->telegram,
+            'wp'=>$request->wp,
+            'email'=>$request->email,
+            'unvan'=>$request->unvan,
+        ]);
+
+        toastr()->success('Əlavə edildi',env('xitab'));
+
+        return redirect()->route('partnyor.index');
     }
 
     /**
@@ -59,7 +74,7 @@ class PartnyorController extends Controller
      */
     public function edit(Partnyor $partnyor)
     {
-        //
+        return view('back.pages.partnyor.edit',compact('partnyor'));
     }
 
     /**
@@ -71,7 +86,22 @@ class PartnyorController extends Controller
      */
     public function update(UpdatePartnyorRequest $request, Partnyor $partnyor)
     {
-        //
+        $partnyor->update([
+            'ad'=>$request->ad,
+            'tel_1'=>$request->tel_1,
+            'tel_2'=>$request->tel_2,
+            'tel_3'=>$request->tel_3,
+            'fb'=>$request->fb,
+            'insta'=>$request->insta,
+            'telegram'=>$request->telegram,
+            'wp'=>$request->wp,
+            'email'=>$request->email,
+            'unvan'=>$request->unvan,
+        ]);
+
+        toastr()->success('Əlavə edildi',env('xitab'));
+
+        return redirect()->route('partnyor.index');
     }
 
     /**

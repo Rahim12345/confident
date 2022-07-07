@@ -153,13 +153,13 @@
                         <div class="dropdown-menu-columns">
                             <div class="dropdown-menu-column">
                                 <a class="dropdown-item" href="{{ route('magaza.index') }}">
-                                    Mağazalar
+                                    Anbar
                                 </a>
                                 <a class="dropdown-item" href="{{ route('vezife.index') }}">
                                     Vəzifələr
                                 </a>
                                 <a class="dropdown-item" href="{{ route('hvezife.index') }}">
-                                    Həkim Vəzifələri
+                                    Müştərilər
                                 </a>
                                 <a class="dropdown-item" href="{{ route('seher.index') }}">
                                     Şəhərlər
@@ -174,7 +174,7 @@
                                     Həkimlər & İşçilər
                                 </a>
                                 <a class="dropdown-item" href="{{ route('partnyor.index') }}">
-                                    Partnyorlar
+                                    Firmalar
                                 </a>
                             </div>
                         </div>

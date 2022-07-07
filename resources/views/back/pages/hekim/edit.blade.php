@@ -135,7 +135,7 @@
                     </div>
 
                     <div class="form-group mb-3 col-md-4 specialAreas" style="display: {{ old('status',$hekim->status) ? 'block' : 'none' }}">
-                        <label class="form-label" for="magaza_id">Mağaza</label>
+                        <label class="form-label" for="magaza_id">Anbar</label>
                         <select name="magaza_id" id="magaza_id" class="form-control @error('magaza_id') is-invalid  @enderror">
                             <option value="">Birini seçin</option>
                             @foreach($magazas as $magaza)

@@ -60,7 +60,7 @@ class UpdateHekimRequest extends FormRequest
             'password'=>'Şifrə',
             'vezife_id'=>'Vəzifə',
             'hvezife_id'=>'Həkim vəzifə',
-            'magaza_id'=>'Mağaza',
+            'magaza_id'=>'Anbar',
         ];
     }
 }
