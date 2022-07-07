@@ -88,5 +88,10 @@ class RayonSeeder extends Seeder
                 'ad'=>$rayon
             ]);
         }
+
+        Rayon::create([
+            'ad'=>'Yasamal',
+            'seher_id'=>1
+        ]);
     }
 }

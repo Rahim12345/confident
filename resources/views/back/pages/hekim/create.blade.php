@@ -40,6 +40,18 @@
                         @enderror
                     </div>
                     <div class="form-group mb-3 col-md-4">
+                        <label class="form-label" for="hvezife_id">Həkim vəzifə</label>
+                        <select name="hvezife_id" id="hvezife_id" class="form-control @error('hvezife_id') is-invalid  @enderror">
+                            <option value="">Birini seçin</option>
+                            @foreach($hvezifes as $hvezife)
+                                <option value="{{ $hvezife->id }}" {{ old('hvezife_id') == $hvezife->id ? 'selected' : '' }}>{{ $hvezife->ad }}</option>
+                            @endforeach
+                        </select>
+                        @error('hvezife_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3 col-md-4">
                         <label class="form-label" for="tel_1">Telefon 1</label>
                         <input type="text" class="form-control @error('tel_1') is-invalid  @enderror" id="tel_1" name="tel_1" value="{{ old('tel_1') }}">
                         @error('tel_1')
@@ -104,9 +116,10 @@
                         @enderror
                     </div>
 
-                    <div class="form-group mb-3 col-md-6 specialAreas" style="display: {{ old('status') ? 'block' : 'none' }}">
+                    <div class="form-group mb-3 col-md-4 specialAreas" style="display: {{ old('status') ? 'block' : 'none' }}">
                         <label class="form-label" for="vezife_id">Vəzifə</label>
                         <select name="vezife_id" id="vezife_id" class="form-control @error('vezife_id') is-invalid  @enderror">
+                            <option value="">Birini seçin</option>
                             @foreach($vezifes as $vezife)
                                 <option value="{{ $vezife->id }}" {{ old('vezife_id') == $vezife->id ? 'selected' : '' }}>{{ $vezife->ad }}</option>
                             @endforeach
@@ -116,9 +129,10 @@
                         @enderror
                     </div>
 
-                    <div class="form-group mb-3 col-md-6 specialAreas" style="display: {{ old('status') ? 'block' : 'none' }}">
+                    <div class="form-group mb-3 col-md-4 specialAreas" style="display: {{ old('status') ? 'block' : 'none' }}">
                         <label class="form-label" for="magaza_id">Mağaza</label>
                         <select name="magaza_id" id="magaza_id" class="form-control @error('magaza_id') is-invalid  @enderror">
+                            <option value="">Birini seçin</option>
                             @foreach($magazas as $magaza)
                                 <option value="{{ $magaza->id }}" {{ old('magaza_id') == $magaza->id ? 'selected' : '' }}>{{ $magaza->ad }}</option>
                             @endforeach

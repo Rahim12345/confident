@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Magaza;
 use Illuminate\Database\Seeder;
 
 class MagazaSeeder extends Seeder
@@ -13,6 +14,11 @@ class MagazaSeeder extends Seeder
      */
     public function run()
     {
-        //
+        for ($i = 1;$i < 6; $i++)
+        {
+            Magaza::create([
+                'ad'=>'Mağaza '.$i
+            ]);
+        }
     }
 }

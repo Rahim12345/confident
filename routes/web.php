@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HekimController;
+use App\Http\Controllers\HekimVezifeController;
 use App\Http\Controllers\IsciController;
 use App\Http\Controllers\KlinikaController;
 use App\Http\Controllers\MagazaController;
@@ -44,6 +45,7 @@ Route::group(['prefix'=>'admin','middleware'=>['auth', 'locale']],function (){
 
     Route::resource('magaza', MagazaController::class);
     Route::resource('vezife', VezifeController::class);
+    Route::resource('hvezife', HekimVezifeController::class);
     Route::resource('seher', SeherController::class);
     Route::resource('rayon', RayonController::class);
     Route::resource('klinika', KlinikaController::class);

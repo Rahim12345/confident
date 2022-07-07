@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Hekim;
 use App\Http\Requests\StoreHekimRequest;
 use App\Http\Requests\UpdateHekimRequest;
+use App\Models\HekimVezife;
 use App\Models\Klinika;
 use App\Models\Magaza;
 use App\Models\User;
@@ -23,7 +24,7 @@ class HekimController extends Controller
     {
         if($request->ajax())
         {
-            $data = User::with('klinika')
+            $data = User::where('id','!=',1)->with('klinika')
                 ->latest()
                 ->get();
 
@@ -109,6 +110,7 @@ class HekimController extends Controller
     {
         $klinikas   = Klinika::latest()->get();
         $vezifes    = Vezife::latest()->get();
+        $hvezifes    = HekimVezife::latest()->get();
         $magazas    = Magaza::latest()->get();
         if ($klinikas->count() == 0)
         {
@@ -122,13 +124,19 @@ class HekimController extends Controller
             return redirect()->route('vezife.create');
         }
 
+        if ($hvezifes->count() == 0)
+        {
+            toastr()->warning('İlk öncə hıkim vəzifələri əlavə etməlisiz',env('xitab'));
+            return redirect()->route('hvezife.create');
+        }
+
         if ($magazas->count() == 0)
         {
             toastr()->warning('İlk öncə mağaza əlavə etməlisiz',env('xitab'));
             return redirect()->route('magaza.create');
         }
 
-        return view('back.pages.hekim.create',compact('klinikas','vezifes','magazas'));
+        return view('back.pages.hekim.create',compact('klinikas','hvezifes','vezifes','magazas'));
     }
 
     /**
@@ -142,6 +150,9 @@ class HekimController extends Controller
         User::create([
             'name'=>$request->ad,
             'klinika_id'=>$request->klinika_id,
+            'hekim_vezife_id'=>$request->hvezife_id,
+            'vezife_id'=>$request->has('status') ? $request->vezife_id : null,
+            'magaza_id'=>$request->has('status') ? $request->magaza_id : null,
             'dogum_gunu'=>$request->dogum_gunu,
             'tel_1'=>$request->tel_1,
             'tel_2'=>$request->tel_2,
@@ -181,6 +192,7 @@ class HekimController extends Controller
     {
         $klinikas   = Klinika::latest()->get();
         $vezifes    = Vezife::latest()->get();
+        $hvezifes    = HekimVezife::latest()->get();
         $magazas    = Magaza::latest()->get();
         if ($klinikas->count() == 0)
         {
@@ -194,13 +206,19 @@ class HekimController extends Controller
             return redirect()->route('vezife.create');
         }
 
+        if ($hvezifes->count() == 0)
+        {
+            toastr()->warning('İlk öncə hıkim vəzifələri əlavə etməlisiz',env('xitab'));
+            return redirect()->route('hvezife.create');
+        }
+
         if ($magazas->count() == 0)
         {
             toastr()->warning('İlk öncə mağaza əlavə etməlisiz',env('xitab'));
             return redirect()->route('magaza.create');
         }
 
-        return view('back.pages.hekim.edit',compact('klinikas','vezifes','hekim','magazas'));
+        return view('back.pages.hekim.edit',compact('klinikas','vezifes','hvezifes','hekim','magazas'));
     }
 
     /**
@@ -213,8 +231,11 @@ class HekimController extends Controller
     public function update(UpdateHekimRequest $request, User $hekim)
     {
         $hekim->update([
-            'ad'=>$request->ad,
+            'name'=>$request->ad,
             'klinika_id'=>$request->klinika_id,
+            'hekim_vezife_id'=>$request->hvezife_id,
+            'vezife_id'=>$request->has('status') ? $request->vezife_id : null,
+            'magaza_id'=>$request->has('status') ? $request->magaza_id : null,
             'dogum_gunu'=>$request->dogum_gunu,
             'tel_1'=>$request->tel_1,
             'tel_2'=>$request->tel_2,
@@ -223,7 +244,9 @@ class HekimController extends Controller
             'insta'=>$request->insta,
             'telegram'=>$request->telegram,
             'wp'=>$request->wp,
-            'email'=>$request->email
+            'email'=>$request->has('status') ? $request->email : null,
+            'password'=>$request->has('status') ? bcrypt($request->password) : null,
+            'status'=>$request->has('status') ? 1 : 0
         ]);
 
         toastr()->success('Redatə edildi',env('xitab'));
@@ -237,8 +260,11 @@ class HekimController extends Controller
      * @param  \App\Models\Hekim  $hekim
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Hekim $hekim)
+    public function destroy(User $hekim)
     {
-        //
+        $hekim->delete();
+        toastr()->success('Silindi',env('xitab'));
+
+        return redirect()->route('hekim.index');
     }
 }

@@ -14,6 +14,9 @@
                 @csrf
                 @method('PUT')
                 <div class="row">
+                    @if(request()->has('status'))
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolorem enim, error, explicabo incidunt, laborum nam nemo nisi obcaecati odit omnis porro possimus repellat repellendus similique soluta totam velit voluptatum.
+                    @endif
                     <div class="form-group mb-3 col-md-4">
                         <label class="form-label" for="ad">A.S.A</label>
                         <input type="text" class="form-control @error('ad') is-invalid  @enderror" id="ad" name="ad" value="{{ old('ad',$hekim->name) }}">
@@ -37,6 +40,18 @@
                             @endforeach
                         </select>
                         @error('klinika_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3 col-md-4">
+                        <label class="form-label" for="hvezife_id">Həkim vəzifə</label>
+                        <select name="hvezife_id" id="hvezife_id" class="form-control @error('hvezife_id') is-invalid  @enderror">
+                            <option value="">Birini seçin</option>
+                            @foreach($hvezifes as $hvezife)
+                                <option value="{{ $hvezife->id }}" {{ old('hvezife_id',$hekim->hekim_vezife_id) == $hvezife->id ? 'selected' : '' }}>{{ $hvezife->ad }}</option>
+                            @endforeach
+                        </select>
+                        @error('hvezife_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -90,7 +105,7 @@
                         @enderror
                     </div>
 
-                    <div class="form-group mb-3 col-md-4 specialAreas" style="display: {{ old('status',$hekim->status) ? 'block' : 'none' }}">
+                    <div class="form-group mb-3 col-md-4" style="display: {{ old('status',$hekim->status) ? 'block' : 'none' }}">
                         <label class="form-label" for="email">Email</label>
                         <input type="text" class="form-control @error('email') is-invalid  @enderror" id="email" name="email" value="{{ old('email',$hekim->email) }}">
                         @error('email')
@@ -105,10 +120,36 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <div class="form-group mb-3 col-md-4 specialAreas" style="display: {{ old('status',$hekim->status) ? 'block' : 'none' }}">
+                        <label class="form-label" for="vezife_id">Vəzifə</label>
+                        <select name="vezife_id" id="vezife_id" class="form-control @error('vezife_id') is-invalid  @enderror">
+                            <option value="">Birini seçin</option>
+                            @foreach($vezifes as $vezife)
+                                <option value="{{ $vezife->id }}" {{ old('vezife_id',$hekim->vezife_id) == $vezife->id ? 'selected' : '' }}>{{ $vezife->ad }}</option>
+                            @endforeach
+                        </select>
+                        @error('vezife_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group mb-3 col-md-4 specialAreas" style="display: {{ old('status',$hekim->status) ? 'block' : 'none' }}">
+                        <label class="form-label" for="magaza_id">Mağaza</label>
+                        <select name="magaza_id" id="magaza_id" class="form-control @error('magaza_id') is-invalid  @enderror">
+                            <option value="">Birini seçin</option>
+                            @foreach($magazas as $magaza)
+                                <option value="{{ $magaza->id }}" {{ old('magaza_id',$hekim->magaza_id) == $magaza->id ? 'selected' : '' }}>{{ $magaza->ad }}</option>
+                            @endforeach
+                        </select>
+                        @error('magaza_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                     <hr>
                     <div class="form-group mb-3 col-md-8">
                         <label class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="status" id="status" {{ old('status',$hekim->status) == '1' ? 'checked' : '' }}>
+                            <input class="form-check-input" type="checkbox" name="status" id="status" {{ old('status',$hekim->status) ? 'checked' : '' }}>
                             <span class="form-check-label">İşçi kimi də əlavə et</span>
                         </label>
                         @error('status')
@@ -125,5 +166,16 @@
 @endsection
 
 @section('js')
-
+    <script>
+        $(document).ready(function () {
+            $('#status').change(function () {
+                if($(this).is(':checked')){
+                    $('.specialAreas').css('display','block');
+                }
+                else{
+                    $('.specialAreas').css('display','none');
+                }
+            });
+        });
+    </script>
 @endsection

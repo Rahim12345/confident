@@ -28,6 +28,7 @@ class StoreHekimRequest extends FormRequest
             'ad'=>'required|max:200',
             'dogum_gunu'=>'nullable|date',
             'klinika_id'=>'nullable|exists:klinikas,id',
+            'hvezife_id'=>'nullable|exists:hekim_vezives,id',
             'tel_1'=>'nullable|max:200',
             'tel_2'=>'nullable|max:200',
             'tel_3'=>'nullable|max:200',
@@ -58,6 +59,7 @@ class StoreHekimRequest extends FormRequest
             'email'=>'Email',
             'password'=>'Şifrə',
             'vezife_id'=>'Vəzifə',
+            'hvezife_id'=>'Həkim vəzifə',
             'magaza_id'=>'Mağaza',
         ];
     }

@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
 
             $table->unsignedBigInteger('klinika_id')->nullable();
             $table->unsignedBigInteger('vezife_id')->nullable();
+            $table->unsignedBigInteger('hekim_vezife_id')->nullable();
             $table->unsignedBigInteger('magaza_id')->nullable();
             $table->date('dogum_gunu')->nullable();
             $table->string('tel_1')->nullable();

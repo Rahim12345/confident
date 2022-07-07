@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Vezife;
+use App\Models\HekimVezife;
 use Illuminate\Database\Seeder;
 
-class VezifeSeeder extends Seeder
+class HekimVezifeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,13 +15,13 @@ class VezifeSeeder extends Seeder
     public function run()
     {
         $vezifes = [
-            'Satıcı',
-            'Kreditor'
+            'Həkim',
+            'Texnik'
         ];
 
         foreach ($vezifes as $vezife)
         {
-            Vezife::create([
+            HekimVezife::create([
                 'ad'=>$vezife
             ]);
         }

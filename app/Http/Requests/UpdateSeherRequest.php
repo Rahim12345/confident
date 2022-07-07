@@ -30,7 +30,7 @@ class UpdateSeherRequest extends FormRequest
                 'required',
                 'max:200',
                 Rule::unique('sehers','ad')->where(function ($query) use ($request) {
-                    return $query->where('id','!=',$request->id);
+                    return $query->where('id','!=',$request->segment('3'));
                 })
             ]
         ];

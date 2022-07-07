@@ -56,6 +56,7 @@
                                 <th>Şəhər</th>
                                 <th>Rayon</th>
                                 <th>Klinika</th>
+                                <th>Status</th>
                                 <th class="w-1"></th>
                             </tr>
                             </thead>
@@ -120,6 +121,7 @@
                     {data: 'seher', name: 'seher'},
                     {data: 'rayon', name: 'rayon'},
                     {data: 'klinika', name: 'klinika'},
+                    {data: 'status', name: 'status'},
                     {data: 'action', name: 'action',searchable:false,orderable: false},
                 ],
                 createdRow: function( row, data, dataIndex ) {

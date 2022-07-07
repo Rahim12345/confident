@@ -158,6 +158,9 @@
                                 <a class="dropdown-item" href="{{ route('vezife.index') }}">
                                     Vəzifələr
                                 </a>
+                                <a class="dropdown-item" href="{{ route('hvezife.index') }}">
+                                    Həkim Vəzifələri
+                                </a>
                                 <a class="dropdown-item" href="{{ route('seher.index') }}">
                                     Şəhərlər
                                 </a>

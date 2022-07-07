@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class UpdateMagazaRequest extends FormRequest
+class UpdateHekimVezifeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,7 +29,7 @@ class UpdateMagazaRequest extends FormRequest
             'ad'=>[
                 'required',
                 'max:200',
-                Rule::unique('magazas','ad')->where(function ($query) use ($request) {
+                Rule::unique('hekim_vezives','ad')->where(function ($query) use ($request) {
                     return $query->where('id','!=',$request->segment('3'));
                 })
             ],

@@ -24,6 +24,7 @@ class User extends Authenticatable
         'avatar',
         'klinika_id',
         'vezife_id',
+        'hekim_vezife_id',
         'magaza_id',
         'dogum_gunu',
         'tel_1',
