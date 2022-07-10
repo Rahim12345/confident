@@ -31,7 +31,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
     @yield('css')
 </head>
-<body class="antialiased">
+{{--@dd(\Illuminate\Support\Facades\Cookie::get('mode'))--}}
+<body class="antialiased {{ \Illuminate\Support\Facades\Cookie::get('mode') ? \Illuminate\Support\Facades\Cookie::get('mode') : '' }}">
 <input type="hidden" value="{{ env('app_url') }}" id="rootUrl">
 
 <div class="page">

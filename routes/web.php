@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('langs/{locale}',[App\Http\Controllers\profileController::class,'langSwitcher'])
         ->name('lang.swithcher');
 
+Route::get('mode/{theme}',[App\Http\Controllers\profileController::class,'modeSwitcher'])
+    ->name('mode.swithcher');
+
 Route::get('/',[App\Http\Controllers\sign\sign_in_upController::class,'login'])
     ->middleware('locale')
     ->name('login');

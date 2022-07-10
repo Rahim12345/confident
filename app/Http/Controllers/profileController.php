@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Rules\MatchOldPassword;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 
@@ -93,6 +94,18 @@ class profileController extends Controller
         else
         {
             session()->put('locale', 'az');
+        }
+
+        return redirect()->back();
+    }
+
+    public function modeSwitcher($theme)
+    {
+        if ($theme == 'dark') {
+            Cookie::queue(Cookie::make('mode', 'theme-dark', 365 * 30 * 24 * 60));
+        }
+        else {
+            Cookie::queue(Cookie::forget('mode'));
         }
 
         return redirect()->back();

@@ -17,7 +17,7 @@ class MagazaSeeder extends Seeder
         for ($i = 1;$i < 6; $i++)
         {
             Magaza::create([
-                'ad'=>'Mağaza '.$i
+                'ad'=>'Anbar '.$i
             ]);
         }
     }
