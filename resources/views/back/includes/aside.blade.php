@@ -182,6 +182,16 @@
                                 <a class="dropdown-item" href="{{ route('kateqoriya.index') }}">
                                     Kateqoriyalar
                                 </a>
+                                <a class="dropdown-item" href="{{ route('model.index') }}">
+                                    Modellər
+                                </a>
+                                <a class="dropdown-item" href="{{ route('vahid.index') }}">
+                                    Vahidlər
+                                </a>
+                                <a class="dropdown-item" href="{{ route('operation.index') }}">
+                                    Kassa əməliyyatı növləri
+                                </a>
+
                             </div>
                         </div>
                     </div>

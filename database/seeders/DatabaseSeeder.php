@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             SeherSeeder::class,
             RayonSeeder::class,
             KlinikaSeeder::class,
+            VahidSeeder::class,
         ]);
     }
 }

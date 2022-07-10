@@ -36,6 +36,13 @@
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             color: #FFFFFF !important;
         }
+        @else
+            @media (max-width: 767.98px)
+            {
+                .table-mobile-md td {
+                    color: #000000 !important;
+                }
+            }
         @endif
 
         .select2-container--default .select2-selection--single {

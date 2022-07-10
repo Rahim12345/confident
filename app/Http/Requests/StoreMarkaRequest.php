@@ -13,7 +13,7 @@ class StoreMarkaRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,14 @@ class StoreMarkaRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'ad'=>'required|max:200|unique:markas,ad'
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'ad'=>'Ad'
         ];
     }
 }

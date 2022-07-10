@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Marka;
-use App\Http\Requests\StoreMarkaRequest;
-use App\Http\Requests\UpdateMarkaRequest;
+use App\Models\Vahid;
+use App\Http\Requests\StoreVahidRequest;
+use App\Http\Requests\UpdateVahidRequest;
 
-class MarkaController extends Controller
+class VahidController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class MarkaController extends Controller
      */
     public function index()
     {
-        return view('back.pages.model.index',[
-            'markas'=>Marka::latest()->get()
+        return view('back.pages.vahid.index',[
+            'vahids'=>Vahid::latest()->get()
         ]);
     }
 
@@ -27,33 +27,33 @@ class MarkaController extends Controller
      */
     public function create()
     {
-        return view('back.pages.model.create');
+        return view('back.pages.vahid.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreMarkaRequest  $request
+     * @param  \App\Http\Requests\StoreVahidRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreMarkaRequest $request)
+    public function store(StoreVahidRequest $request)
     {
-        Marka::create([
+        Vahid::create([
             'ad'=>$request->ad
         ]);
 
         toastr()->success('Əlavə edildi',env('xitab'));
 
-        return redirect()->route('model.index');
+        return redirect()->route('vahid.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Marka  $marka
+     * @param  \App\Models\Vahid  $vahid
      * @return \Illuminate\Http\Response
      */
-    public function show(Marka $marka)
+    public function show(Vahid $vahid)
     {
         //
     }
@@ -61,49 +61,46 @@ class MarkaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Marka  $marka
+     * @param  \App\Models\Vahid  $vahid
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Vahid $vahid)
     {
-        $marka = Marka::findOrFail($id);
-        return view('back.pages.model.edit',[
-            'item'=>$marka
+        return view('back.pages.vahid.edit',[
+            'item'=>$vahid
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateMarkaRequest  $request
-     * @param  \App\Models\Marka  $marka
+     * @param  \App\Http\Requests\UpdateVahidRequest  $request
+     * @param  \App\Models\Vahid  $vahid
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateMarkaRequest $request, $id)
+    public function update(UpdateVahidRequest $request, Vahid $vahid)
     {
-        $marka = Marka::findOrFail($id);
-        $marka->update([
+        $vahid->update([
             'ad'=>$request->ad
         ]);
 
         toastr()->success('Redatə edildi',env('xitab'));
 
-        return redirect()->route('model.index');
+        return redirect()->route('vahid.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Marka  $marka
+     * @param  \App\Models\Vahid  $vahid
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Vahid $vahid)
     {
-        $marka = Marka::findOrFail($id);
-        $marka->delete();
+        $vahid->delete();
 
         toastr()->success('Silindi',env('xitab'));
 
-        return redirect()->route('model.index');
+        return redirect()->route('vahid.index');
     }
 }

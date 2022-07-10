@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmeliyyatNovuController;
 use App\Http\Controllers\HekimController;
 use App\Http\Controllers\HekimVezifeController;
 use App\Http\Controllers\IsciController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\MarkaController;
 use App\Http\Controllers\PartnyorController;
 use App\Http\Controllers\RayonController;
 use App\Http\Controllers\SeherController;
+use App\Http\Controllers\VahidController;
 use App\Http\Controllers\VezifeController;
 use Illuminate\Support\Facades\Route;
 
@@ -61,5 +63,7 @@ Route::group(['prefix'=>'admin','middleware'=>['auth', 'locale']],function (){
     Route::resource('partnyor', PartnyorController::class);
     Route::resource('istehsalci', IstehsalciController::class);
     Route::resource('kateqoriya', KateqoriyaController::class);
-    Route::resource('marka', MarkaController::class);
+    Route::resource('model', MarkaController::class);
+    Route::resource('vahid', VahidController::class);
+    Route::resource('operation', EmeliyyatNovuController::class);
 });

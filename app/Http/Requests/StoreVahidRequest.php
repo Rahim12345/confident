@@ -3,10 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
-class UpdateMarkaRequest extends FormRequest
+class StoreVahidRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,16 +21,10 @@ class UpdateMarkaRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(Request $request)
+    public function rules()
     {
         return [
-            'ad'=>[
-                'required',
-                'max:200',
-                Rule::unique('markas','ad')->where(function ($query) use ($request) {
-                    return $query->where('id','!=',$request->segment('3'));
-                })
-            ],
+            'ad'=>'required|max:200|unique:vahids,ad'
         ];
     }
 
