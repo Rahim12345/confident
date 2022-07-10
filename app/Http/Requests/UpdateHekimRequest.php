@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UpdateHekimRequest extends FormRequest
 {
@@ -36,7 +37,11 @@ class UpdateHekimRequest extends FormRequest
             'insta'=>'nullable|max:200',
             'telegram'=>'nullable|max:200',
             'wp'=>'nullable|max:200',
-            'email'=>$request->has('status') ? 'required|email|max:200' : 'nullable|email|max:200',
+            'email'=>$request->has('status') ? ['required','email','max:200',Rule::unique('users','email')->where(function ($query) use ($request) {
+                    return $query->where('id','!=',$request->segment('3'));
+                })] : ['nullable','email','max:200',Rule::unique('users','email')->where(function ($query) use ($request) {
+                    return $query->where('id','!=',$request->segment('3'));
+                })],
             'password'=>$request->has('status') ? 'required|max:200' : 'nullable|max:200',
             'vezife_id'=>$request->has('status') ? 'required|exists:vezives,id' : 'nullable|exists:vezives,id',
             'magaza_id'=>$request->has('status') ? 'required|exists:magazas,id' : 'nullable|exists:magazas,id',

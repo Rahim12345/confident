@@ -3,8 +3,11 @@
 use App\Http\Controllers\HekimController;
 use App\Http\Controllers\HekimVezifeController;
 use App\Http\Controllers\IsciController;
+use App\Http\Controllers\IstehsalciController;
+use App\Http\Controllers\KateqoriyaController;
 use App\Http\Controllers\KlinikaController;
 use App\Http\Controllers\MagazaController;
+use App\Http\Controllers\MarkaController;
 use App\Http\Controllers\PartnyorController;
 use App\Http\Controllers\RayonController;
 use App\Http\Controllers\SeherController;
@@ -56,4 +59,7 @@ Route::group(['prefix'=>'admin','middleware'=>['auth', 'locale']],function (){
     Route::resource('hekim', HekimController::class);
     Route::resource('isci', IsciController::class);
     Route::resource('partnyor', PartnyorController::class);
+    Route::resource('istehsalci', IstehsalciController::class);
+    Route::resource('kateqoriya', KateqoriyaController::class);
+    Route::resource('marka', MarkaController::class);
 });

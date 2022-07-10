@@ -47,6 +47,10 @@ class HekimController extends Controller
                     return $seher;
                 })
 
+                ->editColumn('status',function ($row){
+                    return $row->status ? '<span class="badge badge-primary" style="background-color: blue;">işçi</span>' : '<span class="badge badge-danger" style="background-color: red;">həkim</span>';
+                })
+
                 ->addColumn('rayon',function ($row){
                     $rayon = '';
                     if ($row->klinika)
@@ -94,7 +98,7 @@ class HekimController extends Controller
                     ';
                 })
 
-                ->rawColumns(['seher','rayon','klinika','action'])
+                ->rawColumns(['seher','rayon','klinika','status','action'])
 
                 ->make(true);
         }

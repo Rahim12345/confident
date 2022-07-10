@@ -156,10 +156,10 @@
                                     Anbar
                                 </a>
                                 <a class="dropdown-item" href="{{ route('vezife.index') }}">
-                                    Vəzifələr
+                                    İşçi Vəzifələri
                                 </a>
                                 <a class="dropdown-item" href="{{ route('hvezife.index') }}">
-                                    Müştərilər
+                                    Həkim Vəzifələri
                                 </a>
                                 <a class="dropdown-item" href="{{ route('seher.index') }}">
                                     Şəhərlər
@@ -170,11 +170,17 @@
                                 <a class="dropdown-item" href="{{ route('klinika.index') }}">
                                     Klinikalar
                                 </a>
+                                <a class="dropdown-item" href="{{ route('partnyor.index') }}">
+                                    Firmalar
+                                </a>
                                 <a class="dropdown-item" href="{{ route('hekim.index') }}">
                                     Həkimlər & İşçilər
                                 </a>
-                                <a class="dropdown-item" href="{{ route('partnyor.index') }}">
-                                    Firmalar
+                                <a class="dropdown-item" href="{{ route('istehsalci.index') }}">
+                                    İstehsalçılar
+                                </a>
+                                <a class="dropdown-item" href="{{ route('kateqoriya.index') }}">
+                                    Kateqoriyalar
                                 </a>
                             </div>
                         </div>

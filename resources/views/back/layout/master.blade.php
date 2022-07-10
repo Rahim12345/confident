@@ -27,6 +27,28 @@
             color: white;
             text-align: center;
         }
+
+        @if(\Illuminate\Support\Facades\Cookie::get('mode'))
+        .dataTables_wrapper .dataTables_length select, table.dataTable tbody tr, .select2-container--default .select2-selection--single,.select2-results{
+            background-color: #232E3C !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #FFFFFF !important;
+        }
+        @endif
+
+        .select2-container--default .select2-selection--single {
+            height: 35px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 35px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow{
+            height: 35px !important;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
     @yield('css')

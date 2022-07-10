@@ -1,6 +1,6 @@
 @extends('back.layout.master')
 
-@section('title') Rayon @endsection
+@section('title') İstehsalçılar @endsection
 
 @section('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
@@ -20,7 +20,7 @@
         .dataTables_wrapper .dataTables_paginate .paginate_button {
             color: #FFFFFF !important;
         }
-        div#rayonlar_length, div#rayonlar_filter, div#rayonlar_info, span.ellipsis{
+        div#istehsalcilar_length, div#istehsalcilar_filter, div#istehsalcilar_info, span.ellipsis{
             color: #656d77 !important;
         }
 
@@ -35,7 +35,7 @@
             color: #656d77 !important;
         }
 
-        #rayonlar_wrapper{
+        #istehsalcilar_wrapper{
             overflow: hidden;
             padding: 10px;
         }
@@ -49,54 +49,22 @@
 
 @section('content')
     <div class="content m-3">
-        <div class="mb-3 col-md-12">
+        <div class="mb-3">
             <div class="col-12">
                 <div class="card">
                     <div class="table-responsive">
-                        <a href="{{ route('rayon.create') }}" class="btn btn-primary w-100">Əlavə et</a>
-                        <table id="rayonlar"
+                        <a href="{{ route('istehsalci.create') }}" class="btn btn-primary w-100">Əlavə et</a>
+                        <table id="istehsalcilar"
                             class="table table-vcenter table-mobile-md card-table">
                             <thead>
                             <tr>
-                                <th>#</th>
                                 <th>Ad</th>
-                                <th>Şəhər</th>
+                                <th>Ölkə</th>
                                 <th class="w-1"></th>
                             </tr>
                             </thead>
                             <tbody>
-                            @if($rayons->count() == 0)
-                                <tr>
-                                    <td colspan="4" align="center">Məlumat tapılmadı</td>
-                                </tr>
-                            @endif
-                            @foreach($rayons as $item)
-                            <tr>
-                                <td data-label="#" >
-                                    {{ $loop->iteration }}
-                                </td>
-                                <td data-label="Ad" >
-                                    <div>{{ $item->ad }}</div>
-                                </td>
-                                <td data-label="Şəhər" >
-                                    <div>{{ $item->seher ? $item->seher->ad : '' }}</div>
-                                </td>
-                                <td>
-                                    <div class="btn-list flex-nowrap">
-                                        <a href="{{ route('rayon.edit',$item->id) }}" class="btn btn-primary">
-                                            <i class="fa fa-pen"></i>
-                                        </a>
-                                        <div class="">
-                                            <form action="{{ route('rayon.destroy',$item->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-danger" type="submit" onclick="return confirm('Silmek istədiyinizdən əminsiniz?')"><i class="fa fa-times"></i></button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
+
                             </tbody>
                         </table>
                     </div>
@@ -119,10 +87,48 @@
 
     <script>
         $(document).ready(function() {
-            var table = $('#rayonlar');
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            var table = $('#istehsalcilar');
+
+            var today = new Date();
+            var date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+            var time = today.getHours() + "-" + today.getMinutes() + "-" + today.getSeconds();
+            var fileName = date+'-'+time;
 
             table.DataTable({
+                processing: true,
+                serverSide: true,
+                select: true,
                 "lengthMenu": [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100,'Bütün']],
+                // dom: '<"top"lBf>rt<"bottom"ip><"clear">',
+                buttons: [
+                    {
+                        extend:'excel',
+                        title:'Klinikalar-'+fileName,
+                        exportOptions:{
+                            columns:[0,1]
+                        },
+                    },
+                    'print'
+                ],
+                ajax: {
+                    url: "{{ route('istehsalci.index') }}",
+                },
+                columns: [
+                    {data: 'ad', name: 'ad'},
+                    {data: 'olke', name: 'olke'},
+                    {data: 'action', name: 'action',searchable:false,orderable: false},
+                ],
+                createdRow: function( row, data, dataIndex ) {
+                    $( row ).find('td:eq(0)').attr('data-label', 'Ad');
+                    $( row ).find('td:eq(1)').attr('data-label', 'Ölkə');
+                    $( row ).find('td:eq(2)').attr('data-label', 'Action');
+                },
                 "language": {
                     "emptyTable": "Cədvəldə heç bir məlumat yoxdur",
                     "infoEmpty": "Nəticə Yoxdur",
@@ -306,6 +312,7 @@
                         }
                     }
                 },
+                stateSave: true,
             });
         });
     </script>

@@ -36,7 +36,7 @@ class StoreHekimRequest extends FormRequest
             'insta'=>'nullable|max:200',
             'telegram'=>'nullable|max:200',
             'wp'=>'nullable|max:200',
-            'email'=>$request->has('status') ? 'required|email|max:200' : 'nullable|email|max:200',
+            'email'=>$request->has('status') ? 'required|email|max:200|unique:users,email' : 'nullable|email|max:200|unique:users,email',
             'password'=>$request->has('status') ? 'required|max:200' : 'nullable|max:200',
             'vezife_id'=>$request->has('status') ? 'required|exists:vezives,id' : 'nullable|exists:vezives,id',
             'magaza_id'=>$request->has('status') ? 'required|exists:magazas,id' : 'nullable|exists:magazas,id',
