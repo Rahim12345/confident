@@ -9,6 +9,7 @@ use App\Http\Controllers\KateqoriyaController;
 use App\Http\Controllers\KlinikaController;
 use App\Http\Controllers\MagazaController;
 use App\Http\Controllers\MarkaController;
+use App\Http\Controllers\MehsulController;
 use App\Http\Controllers\PartnyorController;
 use App\Http\Controllers\RayonController;
 use App\Http\Controllers\SeherController;
@@ -66,4 +67,5 @@ Route::group(['prefix'=>'admin','middleware'=>['auth', 'locale']],function (){
     Route::resource('model', MarkaController::class);
     Route::resource('vahid', VahidController::class);
     Route::resource('operation', EmeliyyatNovuController::class);
+    Route::resource('mehsul', MehsulController::class);
 });

@@ -141,60 +141,154 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false" >
+                    <a class="nav-link dropdown-toggle
+                    @if(in_array(request()->segment(2),[
+                        'magaza',
+                        'vezife',
+                        'hvezife',
+                        'seher',
+                        'rayon',
+                        'klinika',
+                        'hekim',
+                        'isci',
+                        'partnyor',
+                        'istehsalci',
+                        'kateqoriya',
+                        'model',
+                        'vahid',
+                        'operation',
+                    ]))
+                        show
+                    @endif
+                    " href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="
+@if(in_array(request()->segment(2),[
+                        'magaza',
+                        'vezife',
+                        'hvezife',
+                        'seher',
+                        'rayon',
+                        'klinika',
+                        'hekim',
+                        'isci',
+                        'partnyor',
+                        'istehsalci',
+                        'kateqoriya',
+                        'model',
+                        'vahid',
+                        'operation',
+                    ]))
+                        true
+                    @else
+                        false
+                    @endif
+                    " >
                   <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/package -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><circle cx="12" cy="12" r="3" /></svg>
                   </span>
-                        <span class="nav-link-title">
-                    Ayarlar
-                  </span>
+                        <span class="nav-link-title" style="
+                        @if(in_array(request()->segment(2),[
+                            'magaza',
+                            'vezife',
+                            'hvezife',
+                            'seher',
+                            'rayon',
+                            'klinika',
+                            'hekim',
+                            'isci',
+                            'partnyor',
+                            'istehsalci',
+                            'kateqoriya',
+                            'model',
+                            'vahid',
+                            'operation',
+                        ]))
+                            color: #206bc4;
+                        @endif
+                        ">
+                        Ayarlar
+                      </span>
                     </a>
-                    <div class="dropdown-menu">
+                    <div class="dropdown-menu
+                    @if(in_array(request()->segment(2),[
+                        'magaza',
+                        'vezife',
+                        'hvezife',
+                        'seher',
+                        'rayon',
+                        'klinika',
+                        'hekim',
+                        'isci',
+                        'partnyor',
+                        'istehsalci',
+                        'kateqoriya',
+                        'model',
+                        'vahid',
+                        'operation',
+                    ]))
+                        show
+                    @endif
+
+                    ">
                         <div class="dropdown-menu-columns">
                             <div class="dropdown-menu-column">
-                                <a class="dropdown-item" href="{{ route('magaza.index') }}">
+                                <a class="dropdown-item {{ request()->segment(2) == 'magaza' ? 'active' : '' }}" href="{{ route('magaza.index') }}">
                                     Anbar
                                 </a>
-                                <a class="dropdown-item" href="{{ route('vezife.index') }}">
+                                <a class="dropdown-item {{ request()->segment(2) == 'vezife' ? 'active' : '' }}" href="{{ route('vezife.index') }}">
                                     İşçi Vəzifələri
                                 </a>
-                                <a class="dropdown-item" href="{{ route('hvezife.index') }}">
+                                <a class="dropdown-item {{ request()->segment(2) == 'hvezife' ? 'active' : '' }}" href="{{ route('hvezife.index') }}">
                                     Həkim Vəzifələri
                                 </a>
-                                <a class="dropdown-item" href="{{ route('seher.index') }}">
+                                <a class="dropdown-item {{ request()->segment(2) == 'seher' ? 'active' : '' }}" href="{{ route('seher.index') }}">
                                     Şəhərlər
                                 </a>
-                                <a class="dropdown-item" href="{{ route('rayon.index') }}">
+                                <a class="dropdown-item {{ request()->segment(2) == 'rayon' ? 'active' : '' }}" href="{{ route('rayon.index') }}">
                                     Rayonlar
                                 </a>
-                                <a class="dropdown-item" href="{{ route('klinika.index') }}">
+                                <a class="dropdown-item {{ request()->segment(2) == 'klinika' ? 'active' : '' }}" href="{{ route('klinika.index') }}">
                                     Klinikalar
                                 </a>
-                                <a class="dropdown-item" href="{{ route('partnyor.index') }}">
+                                <a class="dropdown-item {{ request()->segment(2) == 'partnyor' ? 'active' : '' }}" href="{{ route('partnyor.index') }}">
                                     Firmalar
                                 </a>
-                                <a class="dropdown-item" href="{{ route('hekim.index') }}">
+                                <a class="dropdown-item {{ request()->segment(2) == 'hekim' ? 'active' : '' }}" href="{{ route('hekim.index') }}">
                                     Həkimlər & İşçilər
                                 </a>
-                                <a class="dropdown-item" href="{{ route('istehsalci.index') }}">
+                                <a class="dropdown-item {{ request()->segment(2) == 'istehsalci' ? 'active' : '' }}" href="{{ route('istehsalci.index') }}">
                                     İstehsalçılar
                                 </a>
-                                <a class="dropdown-item" href="{{ route('kateqoriya.index') }}">
+                                <a class="dropdown-item {{ request()->segment(2) == 'kateqoriya' ? 'active' : '' }}" href="{{ route('kateqoriya.index') }}">
                                     Kateqoriyalar
                                 </a>
-                                <a class="dropdown-item" href="{{ route('model.index') }}">
+                                <a class="dropdown-item {{ request()->segment(2) == 'model' ? 'active' : '' }}" href="{{ route('model.index') }}">
                                     Modellər
                                 </a>
-                                <a class="dropdown-item" href="{{ route('vahid.index') }}">
+                                <a class="dropdown-item {{ request()->segment(2) == 'vahid' ? 'active' : '' }}" href="{{ route('vahid.index') }}">
                                     Vahidlər
                                 </a>
-                                <a class="dropdown-item" href="{{ route('operation.index') }}">
+                                <a class="dropdown-item {{ request()->segment(2) == 'operation' ? 'active' : '' }}" href="{{ route('operation.index') }}">
                                     Kassa əməliyyatı növləri
                                 </a>
 
                             </div>
                         </div>
                     </div>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('mehsul.index') }}" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-producthunt" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M10 16v-8h2.5a2.5 2.5 0 1 1 0 5h-2.5" />
+                      <circle cx="12" cy="12" r="9" />
+                    </svg>
+                  </span>
+                    <span class="nav-link-title" style="{{ request()->segment(2) == 'mehsul' ? 'color: #206bc4;' : '' }}">
+                        Məhsullar
+                    </span>
+                    </a>
                 </li>
             </ul>
         </div>

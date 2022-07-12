@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Marka;
 use Illuminate\Database\Seeder;
 
 class MarkaSeeder extends Seeder
@@ -13,6 +14,11 @@ class MarkaSeeder extends Seeder
      */
     public function run()
     {
-        //
+        for ($i=1;$i<101;$i++)
+        {
+            Marka::create([
+               'ad'=>'Model '.$i
+            ]);
+        }
     }
 }

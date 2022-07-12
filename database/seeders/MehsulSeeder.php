@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Vahid;
 use Illuminate\Database\Seeder;
 
-class VahidSeeder extends Seeder
+class MehsulSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,12 +13,6 @@ class VahidSeeder extends Seeder
      */
     public function run()
     {
-        Vahid::create([
-            'ad'=>'qutu'
-        ]);
-
-        Vahid::create([
-            'ad'=>'ədəd'
-        ]);
+        //
     }
 }
