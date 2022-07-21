@@ -55,7 +55,15 @@ class sign_in_upController extends Controller
             }
             auth()->loginUsingId( \auth()->user()->id, TRUE );
             toastr()->success(__( 'login.welcome' ) );
-            return redirect()->route( 'back.dashboard' );
+            if (!\auth()->user()->vezife_id)
+            {
+                return redirect()->route( 'back.dashboard' );
+            }
+            else
+            {
+                dd('az');
+            }
+
         } else {
             return view( 'sign.login' );
         }
