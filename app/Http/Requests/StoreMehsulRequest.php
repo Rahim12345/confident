@@ -29,7 +29,7 @@ class StoreMehsulRequest extends FormRequest
             'istehsalci_id'=>'required|exists:istehsalcis,id',
             'kateqoriya_id'=>'required|exists:kateqoriyas,id',
             'marka_id'=>'required|exists:markas,id',
-            'qaime_nomresi'=>'nullable|max:255',
+            'qaime_nomresi'=>'required|max:255',
             'tarix'=>'nullable|date',
             'say'=>'required|integer|digits_between:1,5',
             'vahid_id'=>'required|exists:vahids,id',

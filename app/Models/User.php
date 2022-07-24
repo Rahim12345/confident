@@ -60,4 +60,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(Klinika::class,'id','klinika_id');
     }
+
+    public function vezife()
+    {
+        return $this->hasOne(Vezife::class,'id','vezife_id');
+    }
+
+    public function hvezife()
+    {
+        return $this->hasOne(HekimVezife::class,'id','hekim_vezife_id');
+    }
 }

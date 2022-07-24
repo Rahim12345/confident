@@ -162,18 +162,18 @@
                     $( row ).find('td:eq(3)').attr('data-label', 'Kateqoriya');
                     $( row ).find('td:eq(4)').attr('data-label', 'Model');
                     $( row ).find('td:eq(5)').attr('data-label', 'Qaimə No');
-                    $( row ).find('td:eq(6)').attr('data-label', 'Tarix');
-                    $( row ).find('td:eq(7)').attr('data-label', 'Say');
-                    $( row ).find('td:eq(8)').attr('data-label', 'Vahid');
-                    $( row ).find('td:eq(9)').attr('data-label', 'Maya dəyəri');
-                    $( row ).find('td:eq(10)').attr('data-label', 'Topdan dəyəri');
-                    $( row ).find('td:eq(11)').attr('data-label', 'Nağd dəyəri');
-                    $( row ).find('td:eq(12)').attr('data-label', 'Kredit dəyəri');
-                    $( row ).find('td:eq(13)').attr('data-label', 'Bir qutusundakı say');
-                    $( row ).find('td:eq(14)').attr('data-label', 'Qutudakı 1 malın maya dəyəri');
-                    $( row ).find('td:eq(15)').attr('data-label', 'Qutudakı 1 malın topdan dəyəri');
-                    $( row ).find('td:eq(16)').attr('data-label', 'Qutudakı 1 malın nağd dəyəri');
-                    $( row ).find('td:eq(17)').attr('data-label', 'Qutudakı 1 malın kredit dəyəri');
+                    $( row ).find('td:eq(6)').attr('data-label', 'Say');
+                    $( row ).find('td:eq(7)').attr('data-label', 'Vahid');
+                    $( row ).find('td:eq(8)').attr('data-label', 'Maya dəyəri');
+                    $( row ).find('td:eq(9)').attr('data-label', 'Topdan dəyəri');
+                    $( row ).find('td:eq(10)').attr('data-label', 'Nağd dəyəri');
+                    $( row ).find('td:eq(11)').attr('data-label', 'Kredit dəyəri');
+                    $( row ).find('td:eq(12)').attr('data-label', 'Bir qutusundakı say');
+                    $( row ).find('td:eq(13)').attr('data-label', 'Qutudakı 1 malın maya dəyəri');
+                    $( row ).find('td:eq(14)').attr('data-label', 'Qutudakı 1 malın topdan dəyəri');
+                    $( row ).find('td:eq(15)').attr('data-label', 'Qutudakı 1 malın nağd dəyəri');
+                    $( row ).find('td:eq(16)').attr('data-label', 'Qutudakı 1 malın kredit dəyəri');
+                    $( row ).find('td:eq(17)').attr('data-label', 'Tarix');
                     $( row ).find('td:eq(18)').attr('data-label', 'Action');
                 },
                 "language": {

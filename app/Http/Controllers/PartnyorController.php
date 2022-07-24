@@ -112,6 +112,10 @@ class PartnyorController extends Controller
      */
     public function destroy(Partnyor $partnyor)
     {
-        //
+        $partnyor->delete();
+
+        toastr()->success('Silindi',env('xitab'));
+
+        return redirect()->route('partnyor.index');
     }
 }

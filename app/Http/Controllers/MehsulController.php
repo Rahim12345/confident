@@ -31,7 +31,7 @@ class MehsulController extends Controller
             return DataTables::of($data)
 
                 ->editColumn('firma_id',function ($row){
-                    return $row->firma->ad;
+                    return $row->firma ? $row->firma->ad : '<span class="badge badge-danger" style="background-color: red">Silinib</span>';
                 })
 
                 ->editColumn('istehsalci_id',function ($row){
@@ -87,7 +87,7 @@ class MehsulController extends Controller
                     ';
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns(['action','firma_id'])
 
                 ->make(true);
         }

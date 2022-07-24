@@ -48,7 +48,7 @@ class HekimController extends Controller
                 })
 
                 ->editColumn('status',function ($row){
-                    return $row->status ? '<span class="badge badge-primary" style="background-color: blue;">işçi</span>' : '<span class="badge badge-danger" style="background-color: red;">həkim</span>';
+                    return $row->status ? '<span class="badge badge-primary" style="background-color: blue;">işçi</span>' : '<span class="badge badge-danger" style="background-color: red;">'.mb_strtolower($row->hvezife->ad).'</span>';
                 })
 
                 ->addColumn('rayon',function ($row){

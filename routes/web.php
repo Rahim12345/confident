@@ -12,6 +12,8 @@ use App\Http\Controllers\MarkaController;
 use App\Http\Controllers\MehsulController;
 use App\Http\Controllers\PartnyorController;
 use App\Http\Controllers\RayonController;
+use App\Http\Controllers\Satici\SaticiMehsullar;
+use App\Http\Controllers\SatisController;
 use App\Http\Controllers\SeherController;
 use App\Http\Controllers\VahidController;
 use App\Http\Controllers\VezifeController;
@@ -68,4 +70,34 @@ Route::group(['prefix'=>'admin','middleware'=>['auth', 'locale']],function (){
     Route::resource('vahid', VahidController::class);
     Route::resource('operation', EmeliyyatNovuController::class);
     Route::resource('mehsul', MehsulController::class);
+});
+
+
+Route::group(['prefix'=>'satici','middleware'=>['auth', 'locale']],function (){
+    Route::get('mehsul', [SaticiMehsullar::class,'index'])
+        ->name('satici.mehsullar');
+
+    Route::get('satis-et/{usul}',[SatisController::class,'satisEt'])
+        ->name('satici.satis');
+
+    Route::post('customers',[SatisController::class,'getCustomers'])
+        ->name('satis.customers');
+
+    Route::post('firmas',[SatisController::class,'getFirmas'])
+        ->name('satis.firmas');
+
+    Route::post('istehsalcis',[SatisController::class,'getIstehsalcis'])
+        ->name('satis.istehsalcis');
+
+    Route::post('mehsuls',[SatisController::class,'getMehsuls'])
+        ->name('satis.mehsuls');
+
+    Route::post('sebete-at',[SatisController::class,'sebeteAt'])
+        ->name('satis.sebete.at');
+
+    Route::post('sebeti-cagir',[SatisController::class,'sebetiCagir'])
+        ->name('satis.sebeti.cagir');
+
+    Route::post('product-removal', [SatisController::class,'productRemoval'])
+        ->name('front.product.removal');
 });

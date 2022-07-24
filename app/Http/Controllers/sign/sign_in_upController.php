@@ -61,7 +61,7 @@ class sign_in_upController extends Controller
             }
             else
             {
-                dd('az');
+                return redirect()->route('satici.mehsullar');
             }
 
         } else {

@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             IstehsalciSeeder::class,
             KateqoriyaSeeder::class,
             MarkaSeeder::class,
+            SatisUsuluSeeder::class,
         ]);
     }
 }
