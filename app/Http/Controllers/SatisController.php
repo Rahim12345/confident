@@ -20,6 +20,11 @@ class SatisController extends Controller
     public function satisEt($id)
     {
         $satis_usulu = SatisUsulu::findOrFail($id);
+
+//        Cookie::queue(
+//            Cookie::forget('sebet')
+//        );
+
         return view('front.pages.satis.nagd',[
             'satis_usulu'=>$satis_usulu,
             'mehsullar'=>Mehsul::orderBy('ad','asc')->get()->unique('ad')
@@ -242,9 +247,9 @@ class SatisController extends Controller
             <td colspan="5" style="background-color: green !important;font-weight: bold;color: #FFFFFF !important;">SƏBƏT</td>
         </tr>
         ';
+        $total = 0;
         foreach ($sebet as $key=>$mehsul)
         {
-//            dd($mehsul);
             if ($mehsul['vahid'] == 'qutu')
             {
                 $output .= '<tr class="proInfo proInfoSebetim" data-id="'.$key.'">';
@@ -259,6 +264,7 @@ class SatisController extends Controller
                 $output .= '<td> ədəd x </td>';
                 $output .= '<td><input type="number" min="0" value="'.$mehsul['bir_ededinin_qiymeti'].'" step=".01" class="proListBirEdedininQiymeti" data-id="'.$key.'" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "> man</td>';
                 $output .= '</tr>';
+                $total  += $mehsul['qutu_sayi'] * $mehsul['qutusunun_qiymeti'] + $mehsul['ededle_sayi'] * $mehsul['bir_ededinin_qiymeti'];
             }
             else
             {
@@ -269,8 +275,19 @@ class SatisController extends Controller
                 $output .= '<td><input type="number" min="0" value="'.$mehsul['bir_ededinin_qiymeti'].'" step=".01" class="proListBirEdedininQiymeti" data-id="'.$key.'"> man</td>';
                 $output .= '<td style="text-align:center; vertical-align:middle"><button class="btn btn-primary proListBtn" data-action="2" data-id="'.$key.'"><i class="fa fa-pen"></i></button><button class="btn btn-danger proListDeleterBtn" data-action="2" data-id="'.$key.'"><i class="fa fa-times"></i></button></td>';
                 $output .= '</tr>';
+                $total  += $mehsul['ededle_sayi'] * $mehsul['bir_ededinin_qiymeti'];
             }
         }
+
+        $output     .= '
+        <tr class="proInfo proInfoSebetim">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="font-weight: bold;color: #FFFFFF !important;">'.$total.' man</td>
+            <td></td>
+        </tr>
+        ';
 
         return response($output, 200);
     }
