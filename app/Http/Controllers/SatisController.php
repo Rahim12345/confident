@@ -9,6 +9,7 @@ use App\Models\Partnyor;
 use App\Models\Satis;
 use App\Http\Requests\StoreSatisRequest;
 use App\Http\Requests\UpdateSatisRequest;
+use App\Models\SatisDetallari;
 use App\Models\SatisUsulu;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -334,7 +335,35 @@ class SatisController extends Controller
      */
     public function store(StoreSatisRequest $request)
     {
-        //
+        $request->merge(["sebet"=>unserialize(Cookie::get('sebet'))]);
+        $total = 0;
+        foreach ($request->sebet as $mehsul)
+        {
+            $total  += $mehsul['qutu_sayi'] * $mehsul['qutusunun_qiymeti'] + $mehsul['ededle_sayi'] * $mehsul['bir_ededinin_qiymeti'];
+        }
+
+        $satis = Satis::create([
+           'satis_usulu_id'=>$request->satis_usulu_id,
+           'musteri_novu'=>$request->alici_kateqoriya_id,
+           'musterinin_id'=>$request->musterinin_id,
+           'satici_id'=>auth()->user()->id,
+           'ilkin_odenis'=>$total
+        ]);
+
+        foreach ($request->sebet as $key=>$mehsul)
+        {
+            $dbMehsul = Mehsul::findOrFail($key);
+            SatisDetallari::create([
+                'satis_id'=>$satis->id,
+                'mehsul_id'=>$key,
+                'qutu_sayi'=>$mehsul['qutu_sayi'],
+                'qutusunun_cari_qiymeti'=>$dbMehsul->vahid_id == 1 ? $dbMehsul->nagd_deyeri : 0,
+                'qutusunun_faktiki_satildigi_qiymet'=>$mehsul['qutusunun_qiymeti'],
+                'satis_miqdari_ededle'=>$mehsul['ededle_sayi'],
+                'bir_ededinin_cari_qiymeti'=>$dbMehsul->vahid_id == 1 ?  $dbMehsul->qutudaki_1_malin_nagd_deyeri : $dbMehsul->nagd_deyeri,
+                'bir_ededinin_faktiki_satildigi_qiymeti'=>$mehsul['bir_ededinin_qiymeti'],
+            ]);
+        }
     }
 
     /**

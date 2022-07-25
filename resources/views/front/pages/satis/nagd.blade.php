@@ -48,7 +48,7 @@
                             </tr>
                             <tr>
                                 <td class="bg-danger">
-                                    <label for="alinin_unvani" style="color: #FFFFFF">Müştəri seçin :<sup>*</sup></label>
+                                    <label for="musterinin_id" style="color: #FFFFFF">Müştəri seçin :<sup>*</sup></label>
                                 </td>
                                 <td colspan="4">
                                     <select name="musterinin_id" id="musterinin_id" class="form-control w-100 float-end">
@@ -247,6 +247,32 @@
                 {
                     getMehsuls(firma_id, mehsulun_adi, istehsalci_id);
                 }
+                else
+                {
+                    sebetiCagir();
+                }
+            });
+
+            $('#satis-et').click(function () {
+                let alici_kateqoriya_id = $('#alici_kateqoriya_id').val();
+                let musterinin_id       = $('#musterinin_id').val();
+                $.ajax({
+                    type : 'POST',
+                    data : {
+                        alici_kateqoriya_id : alici_kateqoriya_id,
+                        musterinin_id       : musterinin_id,
+                        satis_usulu_id      : '{!! request()->segment(3) !!}',
+                    },
+                    url  : '{!! route('sell.store') !!}',
+                    success : function (response) {
+
+                    },
+                    error : function (myErrors) {
+                        $.each(myErrors.responseJSON.errors, function (key, error) {
+                            toastr.error(error);
+                        })
+                    }
+                });
             });
 
             function getMehsuls(firma_id, mehsulun_adi, istehsalci_id) {

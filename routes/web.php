@@ -77,6 +77,7 @@ Route::group(['prefix'=>'satici','middleware'=>['auth', 'locale']],function (){
     Route::get('mehsul', [SaticiMehsullar::class,'index'])
         ->name('satici.mehsullar');
 
+    Route::resource('sell',SatisController::class);
     Route::get('satis-et/{usul}',[SatisController::class,'satisEt'])
         ->name('satici.satis');
 
@@ -100,4 +101,10 @@ Route::group(['prefix'=>'satici','middleware'=>['auth', 'locale']],function (){
 
     Route::post('product-removal', [SatisController::class,'productRemoval'])
         ->name('front.product.removal');
+
+
+});
+
+Route::get('test', function (){
+    dd(unserialize(Cookie::get('sebet')));
 });
