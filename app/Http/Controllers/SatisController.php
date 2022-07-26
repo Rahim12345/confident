@@ -22,6 +22,10 @@ class SatisController extends Controller
     {
         $satis_usulu = SatisUsulu::findOrFail($id);
 
+        if($id == 4)
+        {
+            abort(404,'Bu səhifə tezliklə hazırlanacaq');
+        }
 //        Cookie::queue(
 //            Cookie::forget('sebet')
 //        );
@@ -159,7 +163,7 @@ class SatisController extends Controller
                     $bir_ededinin_qiymeti      = $mehsul->topdan_deyeri;
                 }
             }
-            elseif ($satis_usulu_id == 2)
+            elseif ($satis_usulu_id == 2 || $satis_usulu_id == 3)
             {
                 if ($mehsul->vahid_id == 1)
                 {
@@ -357,6 +361,14 @@ class SatisController extends Controller
     public function store(StoreSatisRequest $request)
     {
         $request->merge(["sebet"=>unserialize(Cookie::get('sebet'))]);
+        if($request->sebet === false || empty($request->sebet))
+        {
+            return response()->json([
+                'errors'=>[
+                    'bos_sebet'=>'Səbət boşdur'
+                ]
+            ],422);
+        }
         $total = 0;
         foreach ($request->sebet as $mehsul)
         {
@@ -381,7 +393,7 @@ class SatisController extends Controller
                 $qutusunun_cari_qiymeti     = $dbMehsul->vahid_id == 1 ? $dbMehsul->topdan_deyeri : 0;
                 $bir_ededinin_cari_qiymeti  = $dbMehsul->vahid_id == 1 ?  $dbMehsul->qutudaki_1_malin_topdan_deyeri : $dbMehsul->topdan_deyeri;
             }
-            elseif ($request->satis_usulu_id == 2)
+            elseif ($request->satis_usulu_id == 2 || $request->satis_usulu_id == 3)
             {
                 $qutusunun_cari_qiymeti     = $dbMehsul->vahid_id == 1 ? $dbMehsul->nagd_deyeri : 0;
                 $bir_ededinin_cari_qiymeti  = $dbMehsul->vahid_id == 1 ?  $dbMehsul->qutudaki_1_malin_nagd_deyeri : $dbMehsul->nagd_deyeri;

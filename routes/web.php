@@ -17,6 +17,7 @@ use App\Http\Controllers\SatisController;
 use App\Http\Controllers\SeherController;
 use App\Http\Controllers\VahidController;
 use App\Http\Controllers\VezifeController;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
 
 Route::get('langs/{locale}',[App\Http\Controllers\profileController::class,'langSwitcher'])
