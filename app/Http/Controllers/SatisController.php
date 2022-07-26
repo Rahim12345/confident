@@ -134,51 +134,72 @@ class SatisController extends Controller
             ->where('firma_id',$request->firma_id)
             ->where('istehsalci_id',$request->istehsalci_id)
             ->get();
+        $output = $this->prepareProducts($request->satis_usulu_id, $mehsuls);
 
+        return response($output, 200);
+    }
+
+    private function prepareProducts($satis_usulu_id, $mehsuls)
+    {
         $output = '';
-
-        if ($request->satis_usulu_id == 1)
+        foreach ($mehsuls as $mehsul)
         {
-            foreach ($mehsuls as $mehsul)
-            {
-
-            }
-        }
-        elseif ($request->satis_usulu_id == 2)
-        {
-            foreach ($mehsuls as $mehsul)
+            $bir_qutunun_qiymeti            = 0;
+            $qutudaki_1_malin_deyeri        = 0;
+            $bir_ededinin_qiymeti           = 0;
+            if ($satis_usulu_id == 1)
             {
                 if ($mehsul->vahid_id == 1)
                 {
-                    $output .= '<tr class="proInfo" data-id="'.$mehsul->id.'">';
-                        $output .= '<td rowspan="2" style="text-align:center; vertical-align:middle"><b><u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.$mehsul->say.' qutu </i></b></td>';
-                        $output .= '<td style="border-bottom-width: 0px"><input type="number" min="0" value="0" class="proListQutuSayi" data-id="'.$mehsul->id.'"  oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "></td>';
-                        $output .= '<td style="border-bottom-width: 0px">qutu x </td>';
-                        $output .= '<td style="border-bottom-width: 0px"><input type="number" min="0" value="'.$mehsul->nagd_deyeri.'" step=".01"  class="proListBirQutununQiymeti" data-id="'.$mehsul->id.'" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "> man</td>';
-                        $output .= '<td rowspan="2" style="text-align:center; vertical-align:middle"><button class="btn btn-primary proListBtn" data-action="1" data-id="'.$mehsul->id.'"><i class="fa fa-plus"></i></button></td>';
-                    $output .= '</tr>';
-                    $output .= '<tr class="proInfo" data-id="'.$mehsul->id.'">';
-                        $output .= '<td><input type="number" min="0" value="0" class="proListEdedLeSay" data-id="'.$mehsul->id.'"  oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "></td>';
-                        $output .= '<td> ədəd x </td>';
-                        $output .= '<td><input type="number" min="0" value="'.$mehsul->qutudaki_1_malin_nagd_deyeri.'" step=".01" class="proListBirEdedininQiymeti" data-id="'.$mehsul->id.'" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "> man</td>';
-                    $output .= '</tr>';
+                    $bir_qutunun_qiymeti       = $mehsul->topdan_deyeri;
+                    $qutudaki_1_malin_deyeri   = $mehsul->qutudaki_1_malin_topdan_deyeri;
                 }
                 else
                 {
-                    $output .= '<tr class="proInfo" data-id="'.$mehsul->id.'">';
-                        $output .= '<td style="text-align:center; vertical-align:middle"><b><u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.$mehsul->say.' ədəd </i></b></td>';
-                        $output .= '<td><input type="number" min="0" value="0" class="proListEdedLeSay" data-id="'.$mehsul->id.'"></td>';
-                        $output .= '<td>  ədəd x  </td>';
-                        $output .= '<td><input type="number" min="0" value="'.$mehsul->nagd_deyeri.'" step=".01" class="proListBirEdedininQiymeti" data-id="'.$mehsul->id.'"> man</td>';
-                        $output .= '<td style="text-align:center; vertical-align:middle"><button class="btn btn-primary proListBtn" data-action="2" data-id="'.$mehsul->id.'"><i class="fa fa-plus"></i></button></td>';
-                    $output .= '</tr>';
+                    $bir_ededinin_qiymeti      = $mehsul->topdan_deyeri;
                 }
+            }
+            elseif ($satis_usulu_id == 2)
+            {
+                if ($mehsul->vahid_id == 1)
+                {
+                    $bir_qutunun_qiymeti       = $mehsul->nagd_deyeri;
+                    $qutudaki_1_malin_deyeri   = $mehsul->qutudaki_1_malin_nagd_deyeri;
+                }
+                else
+                {
+                    $bir_ededinin_qiymeti      = $mehsul->nagd_deyeri;
+                }
+            }
+
+            if ($mehsul->vahid_id == 1)
+            {
+                $output .= '<tr class="proInfo" data-id="'.$mehsul->id.'">';
+                $output .= '<td rowspan="2" style="text-align:center; vertical-align:middle"><b><u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.$mehsul->say.' qutu </i></b></td>';
+                $output .= '<td style="border-bottom-width: 0px"><input type="number" min="0" value="0" class="proListQutuSayi" data-id="'.$mehsul->id.'"  oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "></td>';
+                $output .= '<td style="border-bottom-width: 0px">qutu x </td>';
+                $output .= '<td style="border-bottom-width: 0px"><input type="number" min="0" value="'.$bir_qutunun_qiymeti.'" step=".01"  class="proListBirQutununQiymeti" data-id="'.$mehsul->id.'" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "> man</td>';
+                $output .= '<td rowspan="2" style="text-align:center; vertical-align:middle"><button class="btn btn-primary proListBtn" data-action="1" data-id="'.$mehsul->id.'"><i class="fa fa-plus"></i></button></td>';
+                $output .= '</tr>';
+                $output .= '<tr class="proInfo" data-id="'.$mehsul->id.'">';
+                $output .= '<td><input type="number" min="0" value="0" class="proListEdedLeSay" data-id="'.$mehsul->id.'"  oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "></td>';
+                $output .= '<td> ədəd x </td>';
+                $output .= '<td><input type="number" min="0" value="'.$qutudaki_1_malin_deyeri.'" step=".01" class="proListBirEdedininQiymeti" data-id="'.$mehsul->id.'" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "> man</td>';
+                $output .= '</tr>';
+            }
+            else
+            {
+                $output .= '<tr class="proInfo" data-id="'.$mehsul->id.'">';
+                $output .= '<td style="text-align:center; vertical-align:middle"><b><u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.$mehsul->say.' ədəd </i></b></td>';
+                $output .= '<td><input type="number" min="0" value="0" class="proListEdedLeSay" data-id="'.$mehsul->id.'"></td>';
+                $output .= '<td>  ədəd x  </td>';
+                $output .= '<td><input type="number" min="0" value="'.$bir_ededinin_qiymeti.'" step=".01" class="proListBirEdedininQiymeti" data-id="'.$mehsul->id.'"> man</td>';
+                $output .= '<td style="text-align:center; vertical-align:middle"><button class="btn btn-primary proListBtn" data-action="2" data-id="'.$mehsul->id.'"><i class="fa fa-plus"></i></button></td>';
+                $output .= '</tr>';
             }
         }
 
-
-
-        return response($output, 200);
+        return $output;
     }
 
     public function sebeteAt(Request $request)
@@ -353,14 +374,26 @@ class SatisController extends Controller
         foreach ($request->sebet as $key=>$mehsul)
         {
             $dbMehsul = Mehsul::findOrFail($key);
+            $qutusunun_cari_qiymeti     = 0;
+            $bir_ededinin_cari_qiymeti  = 0;
+            if ($request->satis_usulu_id == 1)
+            {
+                $qutusunun_cari_qiymeti     = $dbMehsul->vahid_id == 1 ? $dbMehsul->topdan_deyeri : 0;
+                $bir_ededinin_cari_qiymeti  = $dbMehsul->vahid_id == 1 ?  $dbMehsul->qutudaki_1_malin_topdan_deyeri : $dbMehsul->topdan_deyeri;
+            }
+            elseif ($request->satis_usulu_id == 2)
+            {
+                $qutusunun_cari_qiymeti     = $dbMehsul->vahid_id == 1 ? $dbMehsul->nagd_deyeri : 0;
+                $bir_ededinin_cari_qiymeti  = $dbMehsul->vahid_id == 1 ?  $dbMehsul->qutudaki_1_malin_nagd_deyeri : $dbMehsul->nagd_deyeri;
+            }
             SatisDetallari::create([
                 'satis_id'=>$satis->id,
                 'mehsul_id'=>$key,
                 'qutu_sayi'=>$mehsul['qutu_sayi'],
-                'qutusunun_cari_qiymeti'=>$dbMehsul->vahid_id == 1 ? $dbMehsul->nagd_deyeri : 0,
+                'qutusunun_cari_qiymeti'=>$qutusunun_cari_qiymeti,
                 'qutusunun_faktiki_satildigi_qiymet'=>$mehsul['qutusunun_qiymeti'],
                 'satis_miqdari_ededle'=>$mehsul['ededle_sayi'],
-                'bir_ededinin_cari_qiymeti'=>$dbMehsul->vahid_id == 1 ?  $dbMehsul->qutudaki_1_malin_nagd_deyeri : $dbMehsul->nagd_deyeri,
+                'bir_ededinin_cari_qiymeti'=>$bir_ededinin_cari_qiymeti,
                 'bir_ededinin_faktiki_satildigi_qiymeti'=>$mehsul['bir_ededinin_qiymeti'],
             ]);
         }
