@@ -98,6 +98,23 @@
                             </tr>
                             <tr></tr>
                             <tr class="sebetim"></tr>
+                            @if(request()->segment(3) == 3)
+                                <tr>
+                                    <td class="bg-danger"><label for="ilkin_odenis" style="color: #FFFFFF">İlkin ödəniş</label></td>
+                                    <td colspan="4"><input type="number" name="ilkin_odenis" id="ilkin_odenis" value="0"  min="0" max="999999" step=".01" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == '' ? (this.value = 1) : (this.value = this.value) "></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" style="background-color: green !important;font-weight: bold;color: #FFFFFF !important;">Ödəniş Cədvəli</td>
+                                </tr>
+                                <tr class="odenisRow">
+                                    <td><input type="date" name="odenis_tarixleri[]" class="form-control"></td>
+                                    <td><input type="number" name="edilen_odenisler[]" class="form-control" step=".01" value="0"></td>
+                                    <td colspan="2"><textarea name="description[]" cols="30" rows="1" style="height: 34px"></textarea></td>
+                                    <td>
+                                        <button class="btn btn-primary odenisRowAdder"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                            @endif
                             <tr>
                                 <td></td>
                                 <td></td>
@@ -256,12 +273,29 @@
             $('#satis-et').click(function () {
                 let alici_kateqoriya_id = $('#alici_kateqoriya_id').val();
                 let musterinin_id       = $('#musterinin_id').val();
+                @if(request()->segment(3) == 3)
+                    let ilkin_odenis        = $('#ilkin_odenis').val();
+                    let odenis_tarixleri    = [];
+                    $("input[name='odenis_tarixleri[]']").each(function() {
+                        // if(!$(this).val())
+                        // {
+                        //     toastr.error('Ödəniş tarixlərini doldurun');
+                        // }
+                        odenis_tarixleri.push($(this).val());
+                    });
+
+                    console.log(odenis_tarixleri)
+                @endif
                 $.ajax({
                     type : 'POST',
                     data : {
                         alici_kateqoriya_id : alici_kateqoriya_id,
                         musterinin_id       : musterinin_id,
                         satis_usulu_id      : '{!! request()->segment(3) !!}',
+                        @if(request()->segment(3) == 3)
+                        ilkin_odenis        : ilkin_odenis,
+                        odenis_tarixleri    : odenis_tarixleri
+                        @endif
                     },
                     url  : '{!! route('sell.store') !!}',
                     success : function (response) {
@@ -272,6 +306,24 @@
                             toastr.error(error);
                         })
                     }
+                });
+            });
+
+            $('.odenisRowAdder').click(function () {
+                let tr = `
+            <tr class="odenisRow">
+                <td><input type="date" name="odenis_tarixleri[]" class="form-control"></td>
+                <td><input type="number" name="edilen_odenisler[]" class="form-control" step=".01" value="0"></td>
+                <td colspan="2"><textarea name="description[]" cols="30" rows="1" style="height: 34px"></textarea></td>
+                <td>
+                    <button class="btn btn-danger odenisRowDeleter"><i class="fa fa-times"></i></button>
+                </td>
+            </tr>
+            `;
+                $('.odenisRow:last').after(tr);
+
+                $('.odenisRowDeleter').click(function () {
+                    $(this).closest('tr').remove();
                 });
             });
 
@@ -467,5 +519,7 @@
                 }
             });
         }
+
+
     </script>
 @endsection

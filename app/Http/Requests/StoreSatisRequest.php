@@ -43,6 +43,11 @@ class StoreSatisRequest extends FormRequest
             $rules['musterinin_id'] = ['required','exists:partnyors,id'];
         }
 
+        if ($request->satis_usulu_id == 3){
+            $rules['ilkin_odenis'] = ['required','numeric','between:0,999999'];
+            $rules['odenis_tarixleri'] = ['required','array'];
+            $rules['odenis_tarixleri.*'] = ['required'];
+        }
         return $rules;
     }
 
@@ -52,6 +57,8 @@ class StoreSatisRequest extends FormRequest
             'alici_kateqoriya_id'=>'Alıcı kateqoriyası',
             'musterinin_id'=>'Müştəri',
             'satis_usulu_id'=>'Satış üsulu',
+            'ilkin_odenis'=>'İlkin ödəniş',
+            'odenis_tarixleri.*'=>'Ödəniş Cədvəli',
         ];
     }
 }

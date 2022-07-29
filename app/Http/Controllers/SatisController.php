@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HisseCedvel;
 use App\Models\Istehsalci;
 use App\Models\Klinika;
 use App\Models\Mehsul;
@@ -268,52 +269,56 @@ class SatisController extends Controller
     public function sebetiCagir(Request $request)
     {
         $sebet      = unserialize(Cookie::get('sebet'));
-        $output     = '
-        <tr class="proInfo proInfoSebetim">
-            <td colspan="5" style="background-color: green !important;font-weight: bold;color: #FFFFFF !important;">SƏBƏT</td>
-        </tr>
-        ';
-        $total = 0;
-        foreach ($sebet as $key=>$mehsul)
+        $total      = 0;
+        $output     = '';
+        if ($sebet)
         {
-            if ($mehsul['vahid'] == 'qutu')
+            $output     = '
+            <tr class="proInfo proInfoSebetim">
+                <td colspan="5" style="background-color: green !important;font-weight: bold;color: #FFFFFF !important;">SƏBƏT</td>
+            </tr>
+            ';
+            foreach ($sebet as $key=>$mehsul)
             {
-                $output .= '<tr class="proInfo proInfoSebetim" data-id="'.$key.'">';
-                $output .= '<td rowspan="2" style="text-align:center; vertical-align:middle">'.$mehsul['pretext'].'</td>';
-                $output .= '<td style="border-bottom-width: 0px"><input type="number" min="0" value="'.$mehsul['qutu_sayi'].'" class="proListQutuSayi" data-id="'.$key.'"  oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "></td>';
-                $output .= '<td style="border-bottom-width: 0px">qutu x </td>';
-                $output .= '<td style="border-bottom-width: 0px"><input type="number" min="0" value="'.$mehsul['qutusunun_qiymeti'].'" step=".01"  class="proListBirQutununQiymeti" data-id="'.$key.'" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "> man</td>';
-                $output .= '<td rowspan="2" style="text-align:center; vertical-align:middle"><button class="btn btn-primary proListBtn" data-action="1" data-id="'.$key.'"><i class="fa fa-pen"></i></button><button class="btn btn-danger proListDeleterBtn" data-action="1" data-id="'.$key.'"><i class="fa fa-times"></i></button></td>';
-                $output .= '</tr>';
-                $output .= '<tr class="proInfo proInfoSebetim">';
-                $output .= '<td><input type="number" min="0" value="'.$mehsul['ededle_sayi'].'" class="proListEdedLeSay" data-id="'.$key.'"  oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "></td>';
-                $output .= '<td> ədəd x </td>';
-                $output .= '<td><input type="number" min="0" value="'.$mehsul['bir_ededinin_qiymeti'].'" step=".01" class="proListBirEdedininQiymeti" data-id="'.$key.'" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "> man</td>';
-                $output .= '</tr>';
-                $total  += $mehsul['qutu_sayi'] * $mehsul['qutusunun_qiymeti'] + $mehsul['ededle_sayi'] * $mehsul['bir_ededinin_qiymeti'];
+                if ($mehsul['vahid'] == 'qutu')
+                {
+                    $output .= '<tr class="proInfo proInfoSebetim" data-id="'.$key.'">';
+                    $output .= '<td rowspan="2" style="text-align:center; vertical-align:middle">'.$mehsul['pretext'].'</td>';
+                    $output .= '<td style="border-bottom-width: 0px"><input type="number" min="0" value="'.$mehsul['qutu_sayi'].'" class="proListQutuSayi" data-id="'.$key.'"  oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "></td>';
+                    $output .= '<td style="border-bottom-width: 0px">qutu x </td>';
+                    $output .= '<td style="border-bottom-width: 0px"><input type="number" min="0" value="'.$mehsul['qutusunun_qiymeti'].'" step=".01"  class="proListBirQutununQiymeti" data-id="'.$key.'" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "> man</td>';
+                    $output .= '<td rowspan="2" style="text-align:center; vertical-align:middle"><button class="btn btn-primary proListBtn" data-action="1" data-id="'.$key.'"><i class="fa fa-pen"></i></button><button class="btn btn-danger proListDeleterBtn" data-action="1" data-id="'.$key.'"><i class="fa fa-times"></i></button></td>';
+                    $output .= '</tr>';
+                    $output .= '<tr class="proInfo proInfoSebetim">';
+                    $output .= '<td><input type="number" min="0" value="'.$mehsul['ededle_sayi'].'" class="proListEdedLeSay" data-id="'.$key.'"  oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "></td>';
+                    $output .= '<td> ədəd x </td>';
+                    $output .= '<td><input type="number" min="0" value="'.$mehsul['bir_ededinin_qiymeti'].'" step=".01" class="proListBirEdedininQiymeti" data-id="'.$key.'" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "> man</td>';
+                    $output .= '</tr>';
+                    $total  += $mehsul['qutu_sayi'] * $mehsul['qutusunun_qiymeti'] + $mehsul['ededle_sayi'] * $mehsul['bir_ededinin_qiymeti'];
+                }
+                else
+                {
+                    $output .= '<tr class="proInfo proInfoSebetim" data-id="'.$key.'">';
+                    $output .= '<td style="text-align:center; vertical-align:middle">'.$mehsul['pretext'].'</td>';
+                    $output .= '<td><input type="number" min="0" value="'.$mehsul['ededle_sayi'].'" class="proListEdedLeSay" data-id="'.$key.'"></td>';
+                    $output .= '<td>  ədəd x  </td>';
+                    $output .= '<td><input type="number" min="0" value="'.$mehsul['bir_ededinin_qiymeti'].'" step=".01" class="proListBirEdedininQiymeti" data-id="'.$key.'"> man</td>';
+                    $output .= '<td style="text-align:center; vertical-align:middle"><button class="btn btn-primary proListBtn" data-action="2" data-id="'.$key.'"><i class="fa fa-pen"></i></button><button class="btn btn-danger proListDeleterBtn" data-action="2" data-id="'.$key.'"><i class="fa fa-times"></i></button></td>';
+                    $output .= '</tr>';
+                    $total  += $mehsul['ededle_sayi'] * $mehsul['bir_ededinin_qiymeti'];
+                }
             }
-            else
-            {
-                $output .= '<tr class="proInfo proInfoSebetim" data-id="'.$key.'">';
-                $output .= '<td style="text-align:center; vertical-align:middle">'.$mehsul['pretext'].'</td>';
-                $output .= '<td><input type="number" min="0" value="'.$mehsul['ededle_sayi'].'" class="proListEdedLeSay" data-id="'.$key.'"></td>';
-                $output .= '<td>  ədəd x  </td>';
-                $output .= '<td><input type="number" min="0" value="'.$mehsul['bir_ededinin_qiymeti'].'" step=".01" class="proListBirEdedininQiymeti" data-id="'.$key.'"> man</td>';
-                $output .= '<td style="text-align:center; vertical-align:middle"><button class="btn btn-primary proListBtn" data-action="2" data-id="'.$key.'"><i class="fa fa-pen"></i></button><button class="btn btn-danger proListDeleterBtn" data-action="2" data-id="'.$key.'"><i class="fa fa-times"></i></button></td>';
-                $output .= '</tr>';
-                $total  += $mehsul['ededle_sayi'] * $mehsul['bir_ededinin_qiymeti'];
-            }
-        }
 
-        $output     .= '
-        <tr class="proInfo proInfoSebetim">
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="font-weight: bold;color: #FFFFFF !important;">'.$total.' man</td>
-            <td></td>
-        </tr>
-        ';
+            $output     .= '
+            <tr class="proInfo proInfoSebetim">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="font-weight: bold;color: #FFFFFF !important;">'.$total.' man</td>
+                <td></td>
+            </tr>
+            ';
+        }
 
         return response($output, 200);
     }
@@ -380,7 +385,7 @@ class SatisController extends Controller
            'musteri_novu'=>$request->alici_kateqoriya_id,
            'musterinin_id'=>$request->musterinin_id,
            'satici_id'=>auth()->user()->id,
-           'ilkin_odenis'=>$total
+           'ilkin_odenis'=>$request->satis_usulu_id == 3 ? $request->ilkin_odenis :$total
         ]);
 
         foreach ($request->sebet as $key=>$mehsul)
@@ -408,6 +413,17 @@ class SatisController extends Controller
                 'bir_ededinin_cari_qiymeti'=>$bir_ededinin_cari_qiymeti,
                 'bir_ededinin_faktiki_satildigi_qiymeti'=>$mehsul['bir_ededinin_qiymeti'],
             ]);
+
+            if ($request->satis_usulu_id == 3)
+            {
+
+                HisseCedvel::create([
+                    'satis_id'=>$satis->id,
+                    'odenis_tarixi'=>'',
+                    'odenilen_mebleg'=>'',
+                    'serh'=>'',
+                ]);
+            }
         }
     }
 
