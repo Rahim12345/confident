@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\HisseCedvel;
 use App\Models\Istehsalci;
 use App\Models\Klinika;
+use App\Models\LogSatis;
+use App\Models\LogSatisDetallari;
 use App\Models\Mehsul;
 use App\Models\Partnyor;
 use App\Models\Satis;
@@ -27,11 +29,11 @@ class SatisController extends Controller
         {
             abort(404,'Bu səhifə tezliklə hazırlanacaq');
         }
-//        Cookie::queue(
-//            Cookie::forget('sebet')
-//        );
+        Cookie::queue(
+            Cookie::forget('sebet')
+        );
 
-        return view('front.pages.satis.nagd',[
+        return view('front.pages.satis.satis',[
             'satis_usulu'=>$satis_usulu,
             'mehsullar'=>Mehsul::orderBy('ad','asc')->get()->unique('ad')
         ]);
@@ -135,7 +137,8 @@ class SatisController extends Controller
         ]);
 
 
-        $mehsuls = Mehsul::where('ad',$request->mehsulun_adi)
+        $mehsuls = Mehsul::with('satis_details')
+            ->where('ad',$request->mehsulun_adi)
             ->where('firma_id',$request->firma_id)
             ->where('istehsalci_id',$request->istehsalci_id)
             ->get();
@@ -179,28 +182,48 @@ class SatisController extends Controller
 
             if ($mehsul->vahid_id == 1)
             {
-                $output .= '<tr class="proInfo" data-id="'.$mehsul->id.'">';
-                $output .= '<td rowspan="2" style="text-align:center; vertical-align:middle"><b><u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.$mehsul->say.' qutu </i></b></td>';
-                $output .= '<td style="border-bottom-width: 0px"><input type="number" min="0" value="0" class="proListQutuSayi" data-id="'.$mehsul->id.'"  oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "></td>';
-                $output .= '<td style="border-bottom-width: 0px">qutu x </td>';
-                $output .= '<td style="border-bottom-width: 0px"><input type="number" min="0" value="'.$bir_qutunun_qiymeti.'" step=".01"  class="proListBirQutununQiymeti" data-id="'.$mehsul->id.'" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "> man</td>';
-                $output .= '<td rowspan="2" style="text-align:center; vertical-align:middle"><button class="btn btn-primary proListBtn" data-action="1" data-id="'.$mehsul->id.'"><i class="fa fa-plus"></i></button></td>';
-                $output .= '</tr>';
-                $output .= '<tr class="proInfo" data-id="'.$mehsul->id.'">';
-                $output .= '<td><input type="number" min="0" value="0" class="proListEdedLeSay" data-id="'.$mehsul->id.'"  oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "></td>';
-                $output .= '<td> ədəd x </td>';
-                $output .= '<td><input type="number" min="0" value="'.$qutudaki_1_malin_deyeri.'" step=".01" class="proListBirEdedininQiymeti" data-id="'.$mehsul->id.'" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "> man</td>';
-                $output .= '</tr>';
+                $cari_mehsul_uzre_satilmis_mehsul_sayi  = 0;
+                foreach ($mehsul->satis_details as $satis_detail)
+                {
+                    $cari_mehsul_uzre_satilmis_mehsul_sayi  += $satis_detail->qutu_sayi * $mehsul->bir_qutusundaki_say + $satis_detail->satis_miqdari_ededle;
+                }
+                $qaime_uzre_gelen_mehsul_sayi           = $mehsul->say * $mehsul->bir_qutusundaki_say;
+
+                if ($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi != 0)
+                {
+                    $output .= '<tr class="proInfo" data-id="'.$mehsul->id.'">';
+                    $output .= '<td rowspan="2" style="text-align:center; vertical-align:middle"><b><u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.floor(($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi) / $mehsul->bir_qutusundaki_say).' qutu '.(($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi) - floor(($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi) / $mehsul->bir_qutusundaki_say) * $mehsul->bir_qutusundaki_say).' ədəd </i></b></td>';
+                    $output .= '<td style="border-bottom-width: 0px"><input type="number" min="0" value="0" max="'.floor(($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi) / $mehsul->bir_qutusundaki_say).'" class="proListQutuSayi" data-id="'.$mehsul->id.'"  oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "></td>';
+                    $output .= '<td style="border-bottom-width: 0px">qutu x </td>';
+                    $output .= '<td style="border-bottom-width: 0px"><input type="number" min="0" value="'.$bir_qutunun_qiymeti.'" step=".01"  class="proListBirQutununQiymeti" data-id="'.$mehsul->id.'" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "> man</td>';
+                    $output .= '<td rowspan="2" style="text-align:center; vertical-align:middle"><button class="btn btn-primary proListBtn" data-action="1" data-id="'.$mehsul->id.'"><i class="fa fa-plus"></i></button></td>';
+                    $output .= '</tr>';
+                    $output .= '<tr class="proInfo" data-id="'.$mehsul->id.'">';
+                    $output .= '<td><input type="number" min="0" value="0" class="proListEdedLeSay" data-id="'.$mehsul->id.'"  oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "></td>';
+                    $output .= '<td> ədəd x </td>';
+                    $output .= '<td><input type="number" min="0" value="'.$qutudaki_1_malin_deyeri.'" step=".01" class="proListBirEdedininQiymeti" data-id="'.$mehsul->id.'" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\').replace(/(\..*?)\..*/g, \'$1\');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == \'\' ? (this.value = 1) : (this.value = this.value) "> man</td>';
+                    $output .= '</tr>';
+                }
             }
             else
             {
-                $output .= '<tr class="proInfo" data-id="'.$mehsul->id.'">';
-                $output .= '<td style="text-align:center; vertical-align:middle"><b><u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.$mehsul->say.' ədəd </i></b></td>';
-                $output .= '<td><input type="number" min="0" value="0" class="proListEdedLeSay" data-id="'.$mehsul->id.'"></td>';
-                $output .= '<td>  ədəd x  </td>';
-                $output .= '<td><input type="number" min="0" value="'.$bir_ededinin_qiymeti.'" step=".01" class="proListBirEdedininQiymeti" data-id="'.$mehsul->id.'"> man</td>';
-                $output .= '<td style="text-align:center; vertical-align:middle"><button class="btn btn-primary proListBtn" data-action="2" data-id="'.$mehsul->id.'"><i class="fa fa-plus"></i></button></td>';
-                $output .= '</tr>';
+                $cari_mehsul_uzre_satilmis_mehsul_sayi  = 0;
+                foreach ($mehsul->satis_details as $satis_detail)
+                {
+                    $cari_mehsul_uzre_satilmis_mehsul_sayi  += $satis_detail->qutu_sayi * $mehsul->bir_qutusundaki_say + $satis_detail->satis_miqdari_ededle;
+                }
+                $qaime_uzre_gelen_mehsul_sayi           = $mehsul->say;
+
+                if ($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi != 0)
+                {
+                    $output .= '<tr class="proInfo" data-id="'.$mehsul->id.'">';
+                    $output .= '<td style="text-align:center; vertical-align:middle"><b><u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi).' ədəd </i></b></td>';
+                    $output .= '<td><input type="number" min="0" value="0" max="'.($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi).'" class="proListEdedLeSay" data-id="'.$mehsul->id.'"></td>';
+                    $output .= '<td>  ədəd x  </td>';
+                    $output .= '<td><input type="number" min="0" value="'.$bir_ededinin_qiymeti.'" step=".01" class="proListBirEdedininQiymeti" data-id="'.$mehsul->id.'"> man</td>';
+                    $output .= '<td style="text-align:center; vertical-align:middle"><button class="btn btn-primary proListBtn" data-action="2" data-id="'.$mehsul->id.'"><i class="fa fa-plus"></i></button></td>';
+                    $output .= '</tr>';
+                }
             }
         }
 
@@ -221,7 +244,24 @@ class SatisController extends Controller
                 'satis_usulu_id'=>'required|exists:satis_usulus,id',
             ]);
 
-            $mehsul = Mehsul::findOrFail($request->mehsul_id);
+            $mehsul = Mehsul::with('satis_details')->findOrFail($request->mehsul_id);
+
+            $sifaris_olunan_say                     = $request->qutu_sayi * $mehsul->bir_qutusundaki_say + $request->ededle_sayi;
+            $cari_mehsul_uzre_satilmis_mehsul_sayi  = 0;
+            foreach ($mehsul->satis_details as $satis_detail)
+            {
+                $cari_mehsul_uzre_satilmis_mehsul_sayi  += $satis_detail->qutu_sayi * $mehsul->bir_qutusundaki_say + $satis_detail->satis_miqdari_ededle;
+            }
+            $qaime_uzre_gelen_mehsul_sayi           = $mehsul->say * $mehsul->bir_qutusundaki_say;
+            if ($sifaris_olunan_say > $qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi)
+            {
+                return response()->json([
+                    'errors'=>[
+                        'hedden_artiq_mehsul_sifarisi'=>'Bazadakı məhsuldan artıq məhsul sifariş etmək olmaz'
+                    ]
+                ],422);
+            }
+
             $sebet  = unserialize(Cookie::get('sebet'));
             $sebet[$request->mehsul_id]    = [
                 'qutu_sayi'=>$request->qutu_sayi,
@@ -230,7 +270,7 @@ class SatisController extends Controller
                 'bir_ededinin_qiymeti'=>$request->bir_ededinin_qiymeti,
                 'vahid'=>'qutu',
                 'satis_usulu_id'=>$request->satis_usulu_id,
-                'pretext'=>'<b><u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.$mehsul->say.' qutu </i></b>',
+                'pretext'=>'<b><u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.floor(($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi) / $mehsul->bir_qutusundaki_say).' qutu '.(($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi) - floor(($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi) / $mehsul->bir_qutusundaki_say) * $mehsul->bir_qutusundaki_say).' ədəd</i></b>',
             ];
 
             return response()->json([
@@ -247,7 +287,24 @@ class SatisController extends Controller
                 'satis_usulu_id'=>'required|exists:satis_usulus,id',
             ]);
 
-            $mehsul = Mehsul::findOrFail($request->mehsul_id);
+            $mehsul = Mehsul::with('satis_details')->findOrFail($request->mehsul_id);
+            $sifaris_olunan_say                     = $request->qutu_sayi * $mehsul->bir_qutusundaki_say + $request->ededle_sayi;
+            $cari_mehsul_uzre_satilmis_mehsul_sayi  = 0;
+            foreach ($mehsul->satis_details as $satis_detail)
+            {
+                $cari_mehsul_uzre_satilmis_mehsul_sayi  += $satis_detail->qutu_sayi * $mehsul->bir_qutusundaki_say + $satis_detail->satis_miqdari_ededle;
+            }
+            $qaime_uzre_gelen_mehsul_sayi           = $mehsul->say;
+            if ($sifaris_olunan_say > $qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi)
+            {
+                return response()->json([
+                    'errors'=>[
+                        'hedden_artiq_mehsul_sifarisi'=>'Bazadakı məhsuldan artıq məhsul sifariş etmək olmaz'
+                    ]
+                ],422);
+            }
+
+
             $sebet  = unserialize(Cookie::get('sebet'));
             $sebet[$request->mehsul_id]    = [
                 'qutu_sayi'=>0,
@@ -256,7 +313,7 @@ class SatisController extends Controller
                 'bir_ededinin_qiymeti'=>$request->bir_ededinin_qiymeti,
                 'vahid'=>'ədəd',
                 'satis_usulu_id'=>$request->satis_usulu_id,
-                'pretext'=>'<b><u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.$mehsul->say.' ədəd </i></b>',
+                'pretext'=>'<b><u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi).' ədəd </i></b>',
             ];
 
             return response()->json([
@@ -374,57 +431,162 @@ class SatisController extends Controller
                 ]
             ],422);
         }
-        $total = 0;
-        foreach ($request->sebet as $mehsul)
-        {
-            $total  += $mehsul['qutu_sayi'] * $mehsul['qutusunun_qiymeti'] + $mehsul['ededle_sayi'] * $mehsul['bir_ededinin_qiymeti'];
-        }
 
-        $satis = Satis::create([
-           'satis_usulu_id'=>$request->satis_usulu_id,
-           'musteri_novu'=>$request->alici_kateqoriya_id,
-           'musterinin_id'=>$request->musterinin_id,
-           'satici_id'=>auth()->user()->id,
-           'ilkin_odenis'=>$request->satis_usulu_id == 3 ? $request->ilkin_odenis :$total
-        ]);
-
-        foreach ($request->sebet as $key=>$mehsul)
+        if ($request->has('crud'))
         {
-            $dbMehsul = Mehsul::findOrFail($key);
-            $qutusunun_cari_qiymeti     = 0;
-            $bir_ededinin_cari_qiymeti  = 0;
-            if ($request->satis_usulu_id == 1)
-            {
-                $qutusunun_cari_qiymeti     = $dbMehsul->vahid_id == 1 ? $dbMehsul->topdan_deyeri : 0;
-                $bir_ededinin_cari_qiymeti  = $dbMehsul->vahid_id == 1 ?  $dbMehsul->qutudaki_1_malin_topdan_deyeri : $dbMehsul->topdan_deyeri;
-            }
-            elseif ($request->satis_usulu_id == 2 || $request->satis_usulu_id == 3)
-            {
-                $qutusunun_cari_qiymeti     = $dbMehsul->vahid_id == 1 ? $dbMehsul->nagd_deyeri : 0;
-                $bir_ededinin_cari_qiymeti  = $dbMehsul->vahid_id == 1 ?  $dbMehsul->qutudaki_1_malin_nagd_deyeri : $dbMehsul->nagd_deyeri;
-            }
-            SatisDetallari::create([
-                'satis_id'=>$satis->id,
-                'mehsul_id'=>$key,
-                'qutu_sayi'=>$mehsul['qutu_sayi'],
-                'qutusunun_cari_qiymeti'=>$qutusunun_cari_qiymeti,
-                'qutusunun_faktiki_satildigi_qiymet'=>$mehsul['qutusunun_qiymeti'],
-                'satis_miqdari_ededle'=>$mehsul['ededle_sayi'],
-                'bir_ededinin_cari_qiymeti'=>$bir_ededinin_cari_qiymeti,
-                'bir_ededinin_faktiki_satildigi_qiymeti'=>$mehsul['bir_ededinin_qiymeti'],
+            $old_satis  = Satis::with('details')->findOrFail($request->satis_id);
+            $log_satis  = LogSatis::create([
+                'satis_id'=>$old_satis->id,
+                'satis_usulu_id'=>$old_satis->satis_usulu_id,
+                'musteri_novu'=>$old_satis->musteri_novu,
+                'musterinin_id'=>$old_satis->musterinin_id,
+                'satici_id'=>$old_satis->satici_id,
+                'ilkin_odenis'=>$old_satis->ilkin_odenis
             ]);
+
+            foreach ($old_satis->details as $detail)
+            {
+                LogSatisDetallari::create([
+                    'log_satis_id'=>$log_satis->id,
+                    'satis_id'=>$detail->satis_id,
+                    'mehsul_id'=>$detail->mehsul_id,
+                    'qutu_sayi'=>$detail->qutu_sayi,
+                    'qutusunun_cari_qiymeti'=>$detail->qutusunun_cari_qiymeti,
+                    'qutusunun_faktiki_satildigi_qiymet'=>$detail->qutusunun_faktiki_satildigi_qiymet,
+                    'satis_miqdari_ededle'=>$detail->satis_miqdari_ededle,
+                    'bir_ededinin_cari_qiymeti'=>$detail->bir_ededinin_cari_qiymeti,
+                    'bir_ededinin_faktiki_satildigi_qiymeti'=>$detail->bir_ededinin_faktiki_satildigi_qiymeti,
+                ]);
+            }
+            $old_satis->details()->delete();
+
+            if ($old_satis->satis_usulu_id == 3)
+            {
+                foreach ($old_satis->hisse_cedvels as $row)
+                {
+                    HisseCedvel::create([
+                        'satis_id'=>$row->satis_id,
+                        'odenis_tarixi'=>$row->odenis_tarixi,
+                        'serh'=>$row->serh,
+                    ]);
+                }
+                $old_satis->hisse_cedvels()->delete();
+            }
+
+            $total = 0;
+            foreach ($request->sebet as $mehsul)
+            {
+                $total  += $mehsul['qutu_sayi'] * $mehsul['qutusunun_qiymeti'] + $mehsul['ededle_sayi'] * $mehsul['bir_ededinin_qiymeti'];
+            }
+
+            $old_satis->update([
+                'satis_usulu_id'=>$request->satis_usulu_id,
+                'musteri_novu'=>$request->alici_kateqoriya_id,
+                'musterinin_id'=>$request->musterinin_id,
+                'satici_id'=>auth()->user()->id,
+                'ilkin_odenis'=>$request->satis_usulu_id == 3 ? $request->ilkin_odenis :$total
+            ]);
+
+            foreach ($request->sebet as $key=>$mehsul)
+            {
+                $dbMehsul = Mehsul::findOrFail($key);
+                $qutusunun_cari_qiymeti     = 0;
+                $bir_ededinin_cari_qiymeti  = 0;
+                if ($request->satis_usulu_id == 1)
+                {
+                    $qutusunun_cari_qiymeti     = $dbMehsul->vahid_id == 1 ? $dbMehsul->topdan_deyeri : 0;
+                    $bir_ededinin_cari_qiymeti  = $dbMehsul->vahid_id == 1 ?  $dbMehsul->qutudaki_1_malin_topdan_deyeri : $dbMehsul->topdan_deyeri;
+                }
+                elseif ($request->satis_usulu_id == 2 || $request->satis_usulu_id == 3)
+                {
+                    $qutusunun_cari_qiymeti     = $dbMehsul->vahid_id == 1 ? $dbMehsul->nagd_deyeri : 0;
+                    $bir_ededinin_cari_qiymeti  = $dbMehsul->vahid_id == 1 ?  $dbMehsul->qutudaki_1_malin_nagd_deyeri : $dbMehsul->nagd_deyeri;
+                }
+                SatisDetallari::create([
+                    'satis_id'=>$old_satis->id,
+                    'mehsul_id'=>$key,
+                    'qutu_sayi'=>$mehsul['qutu_sayi'],
+                    'qutusunun_cari_qiymeti'=>$qutusunun_cari_qiymeti,
+                    'qutusunun_faktiki_satildigi_qiymet'=>$mehsul['qutusunun_qiymeti'],
+                    'satis_miqdari_ededle'=>$mehsul['ededle_sayi'],
+                    'bir_ededinin_cari_qiymeti'=>$bir_ededinin_cari_qiymeti,
+                    'bir_ededinin_faktiki_satildigi_qiymeti'=>$mehsul['bir_ededinin_qiymeti'],
+                ]);
+            }
 
             if ($request->satis_usulu_id == 3)
             {
+                $n = 0;
+                foreach ($request->odenis_tarixleri as $tarix)
+                {
+                    HisseCedvel::create([
+                        'satis_id'=>$old_satis->id,
+                        'odenis_tarixi'=>$tarix,
+                        'serh'=>$request->description[$n],
+                    ]);
+                    $n++;
+                }
+            }
 
-                HisseCedvel::create([
+        }
+        else
+        {
+            $total = 0;
+            foreach ($request->sebet as $mehsul)
+            {
+                $total  += $mehsul['qutu_sayi'] * $mehsul['qutusunun_qiymeti'] + $mehsul['ededle_sayi'] * $mehsul['bir_ededinin_qiymeti'];
+            }
+
+            $satis = Satis::create([
+                'satis_usulu_id'=>$request->satis_usulu_id,
+                'musteri_novu'=>$request->alici_kateqoriya_id,
+                'musterinin_id'=>$request->musterinin_id,
+                'satici_id'=>auth()->user()->id,
+                'ilkin_odenis'=>$request->satis_usulu_id == 3 ? $request->ilkin_odenis :$total
+            ]);
+
+            foreach ($request->sebet as $key=>$mehsul)
+            {
+                $dbMehsul = Mehsul::findOrFail($key);
+                $qutusunun_cari_qiymeti     = 0;
+                $bir_ededinin_cari_qiymeti  = 0;
+                if ($request->satis_usulu_id == 1)
+                {
+                    $qutusunun_cari_qiymeti     = $dbMehsul->vahid_id == 1 ? $dbMehsul->topdan_deyeri : 0;
+                    $bir_ededinin_cari_qiymeti  = $dbMehsul->vahid_id == 1 ?  $dbMehsul->qutudaki_1_malin_topdan_deyeri : $dbMehsul->topdan_deyeri;
+                }
+                elseif ($request->satis_usulu_id == 2 || $request->satis_usulu_id == 3)
+                {
+                    $qutusunun_cari_qiymeti     = $dbMehsul->vahid_id == 1 ? $dbMehsul->nagd_deyeri : 0;
+                    $bir_ededinin_cari_qiymeti  = $dbMehsul->vahid_id == 1 ?  $dbMehsul->qutudaki_1_malin_nagd_deyeri : $dbMehsul->nagd_deyeri;
+                }
+                SatisDetallari::create([
                     'satis_id'=>$satis->id,
-                    'odenis_tarixi'=>'',
-                    'odenilen_mebleg'=>'',
-                    'serh'=>'',
+                    'mehsul_id'=>$key,
+                    'qutu_sayi'=>$mehsul['qutu_sayi'],
+                    'qutusunun_cari_qiymeti'=>$qutusunun_cari_qiymeti,
+                    'qutusunun_faktiki_satildigi_qiymet'=>$mehsul['qutusunun_qiymeti'],
+                    'satis_miqdari_ededle'=>$mehsul['ededle_sayi'],
+                    'bir_ededinin_cari_qiymeti'=>$bir_ededinin_cari_qiymeti,
+                    'bir_ededinin_faktiki_satildigi_qiymeti'=>$mehsul['bir_ededinin_qiymeti'],
                 ]);
             }
+
+            if ($request->satis_usulu_id == 3)
+            {
+                $n = 0;
+                foreach ($request->odenis_tarixleri as $tarix)
+                {
+                    HisseCedvel::create([
+                        'satis_id'=>$satis->id,
+                        'odenis_tarixi'=>$tarix,
+                        'serh'=>$request->description[$n],
+                    ]);
+                    $n++;
+                }
+            }
         }
+
     }
 
     /**

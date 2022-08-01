@@ -12,4 +12,9 @@ class SatisDetallari extends Model
     protected $table = 'satis_detallaris';
 
     protected $guarded = [];
+
+    public function mehsul()
+    {
+        return $this->hasOne(Mehsul::class,'id','mehsul_id');
+    }
 }

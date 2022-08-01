@@ -10,6 +10,7 @@ use App\Http\Controllers\KlinikaController;
 use App\Http\Controllers\MagazaController;
 use App\Http\Controllers\MarkaController;
 use App\Http\Controllers\MehsulController;
+use App\Http\Controllers\MuqavilelerController;
 use App\Http\Controllers\PartnyorController;
 use App\Http\Controllers\RayonController;
 use App\Http\Controllers\Satici\SaticiMehsullar;
@@ -103,7 +104,10 @@ Route::group(['prefix'=>'satici','middleware'=>['auth', 'locale']],function (){
     Route::post('product-removal', [SatisController::class,'productRemoval'])
         ->name('front.product.removal');
 
+    Route::resource('muqavileler', MuqavilelerController::class);
 
+    Route::post('set-sebet', [MuqavilelerController::class,'setSebet'])
+        ->name('front.set.sebet');
 });
 
 Route::get('test', function (){

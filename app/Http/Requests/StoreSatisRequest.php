@@ -44,9 +44,11 @@ class StoreSatisRequest extends FormRequest
         }
 
         if ($request->satis_usulu_id == 3){
-            $rules['ilkin_odenis'] = ['required','numeric','between:0,999999'];
-            $rules['odenis_tarixleri'] = ['required','array'];
-            $rules['odenis_tarixleri.*'] = ['required'];
+            $rules['ilkin_odenis']              = ['required','numeric','between:0,999999'];
+            $rules['odenis_tarixleri']          = ['required','array'];
+            $rules['odenis_tarixleri.*']        = ['required'];
+            $rules['description']               = ['required','array'];
+            $rules['description.*']             = ['nullable','max:10000'];
         }
         return $rules;
     }
@@ -54,11 +56,12 @@ class StoreSatisRequest extends FormRequest
     public function attributes()
     {
         return [
-            'alici_kateqoriya_id'=>'Alıcı kateqoriyası',
-            'musterinin_id'=>'Müştəri',
-            'satis_usulu_id'=>'Satış üsulu',
-            'ilkin_odenis'=>'İlkin ödəniş',
-            'odenis_tarixleri.*'=>'Ödəniş Cədvəli',
+            'alici_kateqoriya_id'               =>'Alıcı kateqoriyası',
+            'musterinin_id'                     =>'Müştəri',
+            'satis_usulu_id'                    =>'Satış üsulu',
+            'ilkin_odenis'                      =>'İlkin ödəniş',
+            'odenis_tarixleri.*'                =>'Ödəniş Cədvəli',
+            'description.*'                     =>'Təsvir',
         ];
     }
 }

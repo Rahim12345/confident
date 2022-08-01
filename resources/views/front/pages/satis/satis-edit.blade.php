@@ -38,10 +38,10 @@
                                 <td colspan="4">
                                     <select name="alici_kateqoriya_id" id="alici_kateqoriya_id" class="form-control">
                                         <option value="">Birini seçin</option>
-                                        <option value="1">Həkim</option>
-                                        <option value="2">Texnik</option>
-                                        <option value="3">Klinika</option>
-                                        <option value="4">Firma</option>
+                                        <option value="1" {{ $satis->musteri_novu == '1' ? 'selected' : '' }}>Həkim</option>
+                                        <option value="2" {{ $satis->musteri_novu == '2' ? 'selected' : '' }}>Texnik</option>
+                                        <option value="3" {{ $satis->musteri_novu == '3' ? 'selected' : '' }}>Klinika</option>
+                                        <option value="4" {{ $satis->musteri_novu == '4' ? 'selected' : '' }}>Firma</option>
                                     </select>
                                     <small id="alici_kateqoriya_id-js" class="form-text text-danger"></small>
                                 </td>
@@ -53,6 +53,15 @@
                                 <td colspan="4">
                                     <select name="musterinin_id" id="musterinin_id" class="form-control w-100 float-end">
                                         <option value="">Birini seçin</option>
+                                        @foreach($musteris as $musteri)
+                                            <option value="{{ $musteri->id }}" {{ $musteri->id == $satis->musterinin_id ? 'selected' : '' }}>
+                                                @if($satis->musteri_novu == '1' || $satis->musteri_novu == '2')
+                                                    {{ $musteri->name }}
+                                                @elseif($satis->musteri_novu == '3' || $satis->musteri_novu == '4')
+                                                    {{ $musteri->ad }}
+                                                @endif
+                                            </option>
+                                        @endforeach
                                     </select>
                                     <small id="musterinin_id-js" class="form-text text-danger"></small>
                                 </td>
@@ -98,22 +107,28 @@
                             </tr>
                             <tr></tr>
                             <tr class="sebetim"></tr>
-                            @if(request()->segment(3) == 3)
+                            @if($satis->satis_usulu_id == 3)
                                 <tr>
                                     <td class="bg-danger"><label for="ilkin_odenis" style="color: #FFFFFF">İlkin ödəniş</label></td>
-                                    <td colspan="4"><input type="number" name="ilkin_odenis" id="ilkin_odenis" value="0"  min="0" max="999999" step=".01" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == '' ? (this.value = 1) : (this.value = this.value) "></td>
+                                    <td colspan="4"><input type="number" name="ilkin_odenis" id="ilkin_odenis" value="{{ $satis->ilkin_odenis }}"  min="0" max="999999" step=".01" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == '' ? (this.value = 1) : (this.value = this.value) "></td>
                                 </tr>
                                 <tr>
                                     <td colspan="5" style="background-color: green !important;font-weight: bold;color: #FFFFFF !important;">Ödəniş Cədvəli</td>
                                 </tr>
+                                @foreach($satis->hisse_cedvels as $row)
                                 <tr class="odenisRow">
-                                    <td><input type="date" name="odenis_tarixleri[]" class="form-control"></td>
-                                    <td><input type="number" name="edilen_odenisler[]" class="form-control" step=".01" value="0"></td>
-                                    <td colspan="2"><textarea name="description[]" cols="30" rows="1" style="height: 34px"></textarea></td>
+                                    <td><input type="date" name="odenis_tarixleri[]" class="form-control" value="{{ $row->odenis_tarixi }}"></td>
+                                    <td><input type="number" name="edilen_odenisler[]" class="form-control" step=".01" value="{{ $row->odenilen_mebleg }}"></td>
+                                    <td colspan="2"><textarea name="description[]" cols="30" rows="1" style="height: 34px">{{ $row->serh }}</textarea></td>
                                     <td>
+                                        @if($loop->first)
                                         <button class="btn btn-primary odenisRowAdder"><i class="fa fa-plus"></i></button>
+                                        @else
+                                        <button class="btn btn-danger odenisRowDeleter"><i class="fa fa-times"></i></button>
+                                        @endif
                                     </td>
                                 </tr>
+                                @endforeach
                             @endif
                             <tr>
                                 <td></td>
@@ -121,7 +136,7 @@
                                 <td></td>
                                 <td></td>
                                 <td style="text-align: right;">
-                                    <button type="button" id="satis-et" class="btn btn-primary">Satış et <img id="satis-et-loader" style="width: 35px;padding-left: 10px;display: none" src="http://barcode_v2.test/assets/loaders/loading-icon-transparent-background-12.jpg" alt="satış et loader"></button>
+                                    <button type="button" id="satis-et" class="btn btn-primary">Satışı redaktə et <img id="satis-et-loader" style="width: 35px;padding-left: 10px;display: none" src="{{ asset('avatars/loading.jpg') }}" alt="satış et loader"></button>
                                 </td>
                             </tr>
                             </tbody>
@@ -271,40 +286,47 @@
             });
 
             $('#satis-et').click(function () {
+                $(this).prop('disabled',true);
+                $('#satis-et-loader').css('display','block');
                 let alici_kateqoriya_id = $('#alici_kateqoriya_id').val();
                 let musterinin_id       = $('#musterinin_id').val();
-                @if(request()->segment(3) == 3)
+                @if($satis->satis_usulu_id == 3)
                     let ilkin_odenis        = $('#ilkin_odenis').val();
                     let odenis_tarixleri    = [];
+                    let description         = [];
                     $("input[name='odenis_tarixleri[]']").each(function() {
-                        // if(!$(this).val())
-                        // {
-                        //     toastr.error('Ödəniş tarixlərini doldurun');
-                        // }
                         odenis_tarixleri.push($(this).val());
                     });
 
-                    console.log(odenis_tarixleri)
+                    $("textarea[name='description[]']").each(function() {
+                        description.push($(this).val());
+                    });
                 @endif
                 $.ajax({
                     type : 'POST',
                     data : {
+                        crud                : 'edit',
+                        satis_id            : '{!! $satis->id !!}',
                         alici_kateqoriya_id : alici_kateqoriya_id,
                         musterinin_id       : musterinin_id,
-                        satis_usulu_id      : '{!! request()->segment(3) !!}',
-                        @if(request()->segment(3) == 3)
+                        satis_usulu_id      : '{!! $satis->satis_usulu_id !!}',
+                        @if($satis->satis_usulu_id == 3)
                         ilkin_odenis        : ilkin_odenis,
-                        odenis_tarixleri    : odenis_tarixleri
+                        odenis_tarixleri    : odenis_tarixleri,
+                        description         : description,
                         @endif
                     },
                     url  : '{!! route('sell.store') !!}',
                     success : function (response) {
-
+                        $('#satis-et').prop('disabled',false);
+                        $('#satis-et-loader').css('display','none');
                     },
                     error : function (myErrors) {
                         $.each(myErrors.responseJSON.errors, function (key, error) {
                             toastr.error(error);
-                        })
+                        });
+                        $('#satis-et').prop('disabled',false);
+                        $('#satis-et-loader').css('display','none');
                     }
                 });
             });
@@ -327,6 +349,10 @@
                 });
             });
 
+            $('.odenisRowDeleter').click(function () {
+                $(this).closest('tr').remove();
+            });
+
             function getMehsuls(firma_id, mehsulun_adi, istehsalci_id) {
                 $.ajax({
                     type : 'POST',
@@ -334,7 +360,7 @@
                         firma_id         : firma_id,
                         mehsulun_adi     : mehsulun_adi,
                         istehsalci_id    : istehsalci_id,
-                        satis_usulu_id   : '{!! request()->segment(3) !!}',
+                        satis_usulu_id   : '{!! $satis->satis_usulu_id !!}',
                     } ,
                     url : '{!! route('satis.mehsuls') !!}',
                     success : function (response) {
@@ -353,13 +379,26 @@
 
         $(document).on('click','.proListBtn',function () {
             let action                  = $(this).attr('data-action');
+            let className               = $(this).closest('tr').attr('class');
             if(action == 1)
             {
                 let mehsul_id               = $(this).attr('data-id');
-                let qutu_sayi               = $('.proListQutuSayi[data-id="'+mehsul_id+'"]').val();
-                let qutusunun_qiymeti       = $('.proListBirQutununQiymeti[data-id="'+mehsul_id+'"]').val();
-                let ededle_sayi             = $('.proListEdedLeSay[data-id="'+mehsul_id+'"]').val();
-                let bir_ededinin_qiymeti    = $('.proListBirEdedininQiymeti[data-id="'+mehsul_id+'"]').val();
+                let qutu_sayi,qutusunun_qiymeti,ededle_sayi,bir_ededinin_qiymeti;
+                if (className == 'proInfo proInfoSebetim')
+                {
+                    qutu_sayi               = $('.proInfoSebetim  .proListQutuSayi[data-id="'+mehsul_id+'"]').val();
+                    qutusunun_qiymeti       = $('.proInfoSebetim  .proListBirQutununQiymeti[data-id="'+mehsul_id+'"]').val();
+                    ededle_sayi             = $('.proInfoSebetim  .proListEdedLeSay[data-id="'+mehsul_id+'"]').val();
+                    bir_ededinin_qiymeti    = $('.proInfoSebetim  .proListBirEdedininQiymeti[data-id="'+mehsul_id+'"]').val();
+                }
+                else
+                {
+                    qutu_sayi               = $('.proListQutuSayi[data-id="'+mehsul_id+'"]').val();
+                    qutusunun_qiymeti       = $('.proListBirQutununQiymeti[data-id="'+mehsul_id+'"]').val();
+                    ededle_sayi             = $('.proListEdedLeSay[data-id="'+mehsul_id+'"]').val();
+                    bir_ededinin_qiymeti    = $('.proListBirEdedininQiymeti[data-id="'+mehsul_id+'"]').val();
+                }
+
                 if(
                     isNaN(qutu_sayi) ||
                     isNaN(qutusunun_qiymeti) ||
@@ -404,11 +443,14 @@
                         qutusunun_qiymeti    : qutusunun_qiymeti,
                         ededle_sayi          : ededle_sayi,
                         bir_ededinin_qiymeti : bir_ededinin_qiymeti,
-                        satis_usulu_id       : '{!! request()->segment(3) !!}',
+                        satis_usulu_id       : '{!! $satis->satis_usulu_id !!}',
                     } ,
                     url : '{!! route('satis.sebete.at') !!}',
                     success : function (response) {
-                        $('.proInfo[data-id="'+mehsul_id+'"]').remove();
+                        if (className == 'proInfo')
+                        {
+                            $('.proInfo[data-id="'+mehsul_id+'"]').remove();
+                        }
                         sebetiCagir();
                         toastr.success(response.message);
                         // console.log(response)
@@ -423,8 +465,17 @@
             else
             {
                 let mehsul_id               = $(this).attr('data-id');
-                let ededle_sayi             = $('.proListEdedLeSay[data-id="'+mehsul_id+'"]').val();
-                let bir_ededinin_qiymeti    = $('.proListBirEdedininQiymeti[data-id="'+mehsul_id+'"]').val();
+                let ededle_sayi, bir_ededinin_qiymeti;
+                if ($(this).closest('tr').attr('class') == 'proInfo proInfoSebetim')
+                {
+                     ededle_sayi             = $('.proInfoSebetim  .proListEdedLeSay[data-id="'+mehsul_id+'"]').val();
+                     bir_ededinin_qiymeti    = $('.proInfoSebetim  .proListBirEdedininQiymeti[data-id="'+mehsul_id+'"]').val();
+                }
+                else
+                {
+                     ededle_sayi             = $('.proListEdedLeSay[data-id="'+mehsul_id+'"]').val();
+                     bir_ededinin_qiymeti    = $('.proListBirEdedininQiymeti[data-id="'+mehsul_id+'"]').val();
+                }
 
                 if(
                     isNaN(ededle_sayi) ||
@@ -458,11 +509,14 @@
                         mehsul_id            : mehsul_id,
                         ededle_sayi          : ededle_sayi,
                         bir_ededinin_qiymeti : bir_ededinin_qiymeti,
-                        satis_usulu_id       : '{!! request()->segment(3) !!}',
+                        satis_usulu_id       : '{!! $satis->satis_usulu_id !!}',
                     } ,
                     url : '{!! route('satis.sebete.at') !!}',
                     success : function (response) {
-                        $('.proInfo[data-id="'+mehsul_id+'"]').remove();
+                        if (className == 'proInfo')
+                        {
+                            $('.proInfo[data-id="'+mehsul_id+'"]').remove();
+                        }
                         sebetiCagir();
                         toastr.success(response.message);
                         // console.log(response)
@@ -474,14 +528,6 @@
                     }
                 });
             }
-
-            //
-            //
-            // console.log('mehsul_id -'+mehsul_id);
-            // console.log('qutu_sayi -'+qutu_sayi);
-            // console.log('qutusunun_qiymeti -'+qutusunun_qiymeti);
-            // console.log('ededle_sayi -'+ededle_sayi);
-            // console.log('bir_ededinin_qiymeti -'+bir_ededinin_qiymeti);
         });
 
         $(document).on('click', '.proListDeleterBtn', function () {
@@ -508,7 +554,7 @@
             return !(charCode > 31 && (charCode < 48 || charCode > 57));
         }
 
-        sebetiCagir()
+        setSebet();
         function sebetiCagir() {
             $('.proInfoSebetim').remove();
             $.ajax({
@@ -520,6 +566,17 @@
             });
         }
 
-
+        function setSebet() {
+            $.ajax({
+                type : 'POST',
+                url  : '{!! route('front.set.sebet') !!}',
+                data : {
+                  id :   {{ request()->segment(3) }}
+                },
+                success : function (response) {
+                    sebetiCagir();
+                }
+            });
+        }
     </script>
 @endsection

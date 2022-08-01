@@ -36,4 +36,9 @@ class Mehsul extends Model
     {
         return $this->hasOne(Vahid::class,'id','vahid_id');
     }
+
+    public function satis_details()
+    {
+        return $this->hasMany(SatisDetallari::class,'mehsul_id','id');
+    }
 }
