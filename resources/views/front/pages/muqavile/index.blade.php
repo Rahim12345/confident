@@ -105,6 +105,7 @@
                 processing: true,
                 serverSide: true,
                 select: true,
+                order: [[4, 'desc']],
                 "lengthMenu": [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100,'Bütün']],
                 // dom: '<"top"lBf>rt<"bottom"ip><"clear">',
                 buttons: [

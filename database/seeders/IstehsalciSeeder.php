@@ -17,7 +17,7 @@ class IstehsalciSeeder extends Seeder
         for ($i=1;$i<101;$i++)
         {
             Istehsalci::create([
-                'ad'=>'İstehsalçı '.$i,
+                'ad'=>'İstehsalçı-'.$i,
                 'olke'=>'Ölkə '.rand(1,5),
             ]);
         }

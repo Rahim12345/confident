@@ -111,16 +111,19 @@ class MuqavilelerController extends Controller
                 ->addColumn('action',function ($row){
                     return '
                     <div class="btn-list flex-nowrap">
-                        <a href="'.route('muqavileler.edit',$row->id).'" class="btn btn-primary">
+                        '.($row->details()->count() > 0 ? ' <a href="'.route('muqavileler.edit',$row->id).'" class="btn btn-primary">
                             <i class="fa fa-pen"></i>
+                        </a> ' : '').'
+                        <a href="'.route('front.xronoliji',$row->id).'" class="btn btn-info">
+                            Xronloji
                         </a>
-                        <div class="">
+                        '.($row->details()->count() > 0 ? '<div class="">
                             <form action="'.route('muqavileler.destroy',$row->id).'" method="POST">
                                 '.csrf_field().'
                                 '.method_field('DELETE').'
                                 <button class="btn btn-danger" type="submit" onclick="return confirm(\'Müqaviləni ləğv etmək istədiyinizdən əminsiniz?\')">Tam iadə</button>
                             </form>
-                        </div>
+                        </div>' : '').'
                     </div>
                     ';
                 })
@@ -204,7 +207,7 @@ class MuqavilelerController extends Controller
     public function setSebet(Request $request)
     {
         $satis          = Satis::with('details.mehsul')->findOrFail($request->id);
-
+        $sebet          = [];
         foreach ($satis->details as $detail)
         {
             $mehsul = Mehsul::with('satis_details')->findOrFail($detail->mehsul_id);
@@ -233,7 +236,7 @@ class MuqavilelerController extends Controller
                 'bir_ededinin_qiymeti'=>$detail->bir_ededinin_faktiki_satildigi_qiymeti,
                 'vahid'=>$detail->mehsul->vahid_id == 1 ? 'qutu' : 'ədəd',
                 'satis_usulu_id'=>$satis->satis_usulu_id,
-                'pretext'=>'<b><u>'.$detail->mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.$preSay.'</i></b>',
+                'pretext'=>'<b>'.$mehsul->ad.' - <u>'.$detail->mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.$preSay.'</i></b>',
             ];
         }
 
@@ -241,6 +244,23 @@ class MuqavilelerController extends Controller
             'products'=>$sebet,
             'message'=>__('Məhsul səbətə əlavə edildi')
         ], 200)->withCookie(Cookie::forever('sebet', serialize($sebet)));
+    }
+
+    public function xronoliji($id, $log_id = null)
+    {
+        if ($log_id)
+        {
+            $cariSatis          = LogSatis::where('satici_id', auth()->user()->id)->with('satis_usulu','satici','details','hisse_cedvels')->findOrFail($log_id);
+        }
+        else
+        {
+            $cariSatis          = Satis::where('satici_id', auth()->user()->id)->with('satis_usulu','satici','details','hisse_cedvels')->findOrFail($id);
+        }
+//        dd($cariSatis);
+
+        $arxivSatislari         = LogSatis::with('satis_usulu','satici','details','hisse_cedvels')->orderBy('id','desc')->where('satis_id',$id)->get();
+
+        return view('front.pages.satis.xronoloji',compact('cariSatis','arxivSatislari'));
     }
 
     /**

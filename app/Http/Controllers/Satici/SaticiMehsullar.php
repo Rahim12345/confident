@@ -13,11 +13,12 @@ class SaticiMehsullar extends Controller
     {
         if($request->ajax())
         {
-            $data = Mehsul::with('firma','istehsalci','kateqoriya','marka','vahid')
-                ->latest()
-                ->get();
+            $data = Mehsul::query()
+                ->with(['firma','istehsalci','kateqoriya','marka','vahid']);
 
             return DataTables::of($data)
+
+                ->addIndexColumn()
 
                 ->editColumn('firma_id',function ($row){
                     return $row->firma ? $row->firma->ad : '<span class="badge badge-danger" style="background-color: red">Silinib</span>';

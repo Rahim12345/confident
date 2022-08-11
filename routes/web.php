@@ -108,6 +108,9 @@ Route::group(['prefix'=>'satici','middleware'=>['auth', 'locale']],function (){
 
     Route::post('set-sebet', [MuqavilelerController::class,'setSebet'])
         ->name('front.set.sebet');
+
+    Route::get('xronoliji/{id}/{log_id?}', [MuqavilelerController::class,'xronoliji'])
+        ->name('front.xronoliji');
 });
 
 Route::get('test', function (){

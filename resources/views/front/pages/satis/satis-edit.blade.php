@@ -318,8 +318,13 @@
                     },
                     url  : '{!! route('sell.store') !!}',
                     success : function (response) {
-                        $('#satis-et').prop('disabled',false);
+                        // $('#satis-et').prop('disabled',false);
                         $('#satis-et-loader').css('display','none');
+
+                        toastr.success('Müqavilə bağlandı, yönləndirilirsiniz ...');
+                        setTimeout(function () {
+                            window.location.href = '{!! route('muqavileler.index') !!}';
+                        },1000);
                     },
                     error : function (myErrors) {
                         $.each(myErrors.responseJSON.errors, function (key, error) {
@@ -437,6 +442,8 @@
                 $.ajax({
                     type : 'POST',
                     data : {
+                        crud                 : 'edit',
+                        satis_id             : {!! request()->segment(3) !!},
                         action               : action,
                         mehsul_id            : mehsul_id,
                         qutu_sayi            : qutu_sayi,
@@ -505,6 +512,8 @@
                 $.ajax({
                     type : 'POST',
                     data : {
+                        crud                 : 'edit',
+                        satis_id             : {!! request()->segment(3) !!},
                         action               : action,
                         mehsul_id            : mehsul_id,
                         ededle_sayi          : ededle_sayi,

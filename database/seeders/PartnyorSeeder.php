@@ -17,7 +17,7 @@ class PartnyorSeeder extends Seeder
         for ($i=1;$i<101;$i++)
         {
             Partnyor::create([
-                'ad'=>'Firma '.$i
+                'ad'=>'Firma-'.$i
             ]);
         }
     }

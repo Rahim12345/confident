@@ -301,8 +301,14 @@
                     },
                     url  : '{!! route('sell.store') !!}',
                     success : function (response) {
-                        $('#satis-et').prop('disabled',false);
+                        // $('#satis-et').prop('disabled',false);
                         $('#satis-et-loader').css('display','none');
+
+                        toastr.success('Müqavilə bağlandı, yönləndirilirsiniz ...');
+                        setTimeout(function () {
+                            window.location.href = '{!! route('muqavileler.index') !!}';
+                        },1000);
+
                     },
                     error : function (myErrors) {
                         $.each(myErrors.responseJSON.errors, function (key, error) {

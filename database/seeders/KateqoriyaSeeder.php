@@ -17,7 +17,7 @@ class KateqoriyaSeeder extends Seeder
         for ($i=1;$i<101;$i++)
         {
             Kateqoriya::create([
-                'ad'=>'Kateqoriya '.$i
+                'ad'=>'Kateqoriya-'.$i
             ]);
         }
     }

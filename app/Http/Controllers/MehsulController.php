@@ -24,9 +24,7 @@ class MehsulController extends Controller
     {
         if($request->ajax())
         {
-            $data = Mehsul::with('firma','istehsalci','kateqoriya','marka','vahid')
-                ->latest()
-                ->get();
+            $data = Mehsul::query()->with(['firma','istehsalci','kateqoriya','marka','vahid']);
 
             return DataTables::of($data)
 

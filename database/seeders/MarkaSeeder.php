@@ -17,7 +17,7 @@ class MarkaSeeder extends Seeder
         for ($i=1;$i<101;$i++)
         {
             Marka::create([
-               'ad'=>'Model '.$i
+               'ad'=>'Model-'.$i
             ]);
         }
     }

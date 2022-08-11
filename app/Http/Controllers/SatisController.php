@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\HisseCedvel;
 use App\Models\Istehsalci;
 use App\Models\Klinika;
+use App\Models\LogHisseCedvel;
 use App\Models\LogSatis;
 use App\Models\LogSatisDetallari;
 use App\Models\Mehsul;
@@ -253,7 +254,20 @@ class SatisController extends Controller
                 $cari_mehsul_uzre_satilmis_mehsul_sayi  += $satis_detail->qutu_sayi * $mehsul->bir_qutusundaki_say + $satis_detail->satis_miqdari_ededle;
             }
             $qaime_uzre_gelen_mehsul_sayi           = $mehsul->say * $mehsul->bir_qutusundaki_say;
-            if ($sifaris_olunan_say > $qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi)
+
+
+            $cari_muqavile_uzre_satilmis_mehsul_sayi = 0;
+            if ($request->has('crud'))
+            {
+                $satilmis_cari_mehsul = SatisDetallari::where('satis_id',$request->satis_id)->where('mehsul_id',$request->mehsul_id)->first();
+                if ($satilmis_cari_mehsul)
+                {
+                    $cari_muqavile_uzre_satilmis_mehsul_sayi = $satilmis_cari_mehsul->qutu_sayi * $mehsul->bir_qutusundaki_say + $satilmis_cari_mehsul->satis_miqdari_ededle;
+                }
+            }
+
+
+            if ($sifaris_olunan_say > $qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi + $cari_muqavile_uzre_satilmis_mehsul_sayi)
             {
                 return response()->json([
                     'errors'=>[
@@ -270,7 +284,7 @@ class SatisController extends Controller
                 'bir_ededinin_qiymeti'=>$request->bir_ededinin_qiymeti,
                 'vahid'=>'qutu',
                 'satis_usulu_id'=>$request->satis_usulu_id,
-                'pretext'=>'<b><u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.floor(($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi) / $mehsul->bir_qutusundaki_say).' qutu '.(($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi) - floor(($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi) / $mehsul->bir_qutusundaki_say) * $mehsul->bir_qutusundaki_say).' ədəd</i></b>',
+                'pretext'=>'<b>'.$mehsul->ad.' - <u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.floor(($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi) / $mehsul->bir_qutusundaki_say).' qutu '.(($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi) - floor(($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi) / $mehsul->bir_qutusundaki_say) * $mehsul->bir_qutusundaki_say).' ədəd</i></b>',
             ];
 
             return response()->json([
@@ -295,7 +309,18 @@ class SatisController extends Controller
                 $cari_mehsul_uzre_satilmis_mehsul_sayi  += $satis_detail->qutu_sayi * $mehsul->bir_qutusundaki_say + $satis_detail->satis_miqdari_ededle;
             }
             $qaime_uzre_gelen_mehsul_sayi           = $mehsul->say;
-            if ($sifaris_olunan_say > $qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi)
+
+            $cari_muqavile_uzre_satilmis_mehsul_sayi = 0;
+            if ($request->has('crud'))
+            {
+                $satilmis_cari_mehsul = SatisDetallari::where('satis_id',$request->satis_id)->where('mehsul_id',$request->mehsul_id)->first();
+                if ($satilmis_cari_mehsul)
+                {
+                    $cari_muqavile_uzre_satilmis_mehsul_sayi = $satilmis_cari_mehsul->qutu_sayi * $mehsul->bir_qutusundaki_say + $satilmis_cari_mehsul->satis_miqdari_ededle;
+                }
+            }
+
+            if ($sifaris_olunan_say > $qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi + $cari_muqavile_uzre_satilmis_mehsul_sayi)
             {
                 return response()->json([
                     'errors'=>[
@@ -313,7 +338,7 @@ class SatisController extends Controller
                 'bir_ededinin_qiymeti'=>$request->bir_ededinin_qiymeti,
                 'vahid'=>'ədəd',
                 'satis_usulu_id'=>$request->satis_usulu_id,
-                'pretext'=>'<b><u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi).' ədəd </i></b>',
+                'pretext'=>'<b>'.$mehsul->ad.' - <u>'.$mehsul->qaime_nomresi.'</u> <i> qaimə üzrə '.($qaime_uzre_gelen_mehsul_sayi - $cari_mehsul_uzre_satilmis_mehsul_sayi).' ədəd </i></b>',
             ];
 
             return response()->json([
@@ -464,7 +489,8 @@ class SatisController extends Controller
             {
                 foreach ($old_satis->hisse_cedvels as $row)
                 {
-                    HisseCedvel::create([
+                    LogHisseCedvel::create([
+                        'log_satis_id'=>$log_satis->id,
                         'satis_id'=>$row->satis_id,
                         'odenis_tarixi'=>$row->odenis_tarixi,
                         'serh'=>$row->serh,
