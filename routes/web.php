@@ -16,6 +16,7 @@ use App\Http\Controllers\RayonController;
 use App\Http\Controllers\Satici\SaticiMehsullar;
 use App\Http\Controllers\SatisController;
 use App\Http\Controllers\SeherController;
+use App\Http\Controllers\Statist;
 use App\Http\Controllers\VahidController;
 use App\Http\Controllers\VezifeController;
 use Illuminate\Support\Facades\Cookie;
@@ -50,8 +51,7 @@ Route::post('profile',[ App\Http\Controllers\profileController::class,'profileUp
 
 Route::group(['prefix'=>'admin','middleware'=>['auth', 'locale']],function (){
 
-    Route::get('/',[App\Http\Controllers\AdminController::class,'index'])
-        ->name('back.dashboard');
+    Route::resource('/statist', Statist::class);
     Route::get('profile',[App\Http\Controllers\profileController::class,'profile'])
         ->name('back.profile');
 
@@ -114,5 +114,6 @@ Route::group(['prefix'=>'satici','middleware'=>['auth', 'locale']],function (){
 });
 
 Route::get('test', function (){
-    dd(unserialize(Cookie::get('sebet')));
+
+
 });

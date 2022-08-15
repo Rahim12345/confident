@@ -6,6 +6,7 @@ use App\Helpers\Options;
 use App\Models\Option;
 use App\Http\Requests\StoreOptionRequest;
 use App\Http\Requests\UpdateOptionRequest;
+use App\Traits\WhatsappMessenger;
 
 class OptionController extends Controller
 {
@@ -23,7 +24,6 @@ class OptionController extends Controller
             'youtube'=>Options::getOption('youtube'),
             'email'=>Options::getOption('email'),
             'tel'=>Options::getOption('tel'),
-
         ]);
     }
 

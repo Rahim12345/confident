@@ -57,7 +57,7 @@ class sign_in_upController extends Controller
             toastr()->success(__( 'login.welcome' ) );
             if (!\auth()->user()->vezife_id)
             {
-                return redirect()->route( 'back.dashboard' );
+                return redirect()->route( 'statist.index' );
             }
             else
             {

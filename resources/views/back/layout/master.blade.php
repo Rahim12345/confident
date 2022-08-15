@@ -69,10 +69,10 @@
         @include('back.includes.header')
     <div class="content">
         <div class="container-xl">
-        <div class="page-wrapper">
-            @yield('content')
-            @include('back.includes.footer')
-        </div>
+            <div class="page-wrapper">
+                @yield('content')
+                @include('back.includes.footer')
+            </div>
         </div>
     </div>
 </div>
