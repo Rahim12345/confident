@@ -16,7 +16,7 @@ class MehsulSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
-        for ($i=1;$i<=10000;$i++)
+        for ($i=1;$i<=1000;$i++)
         {
             $vahid_id               = rand(1,2);
             $maya_deyeri            = rand(1,300);

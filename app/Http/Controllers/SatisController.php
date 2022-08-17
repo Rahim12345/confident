@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\HisseCedvel;
 use App\Models\Istehsalci;
+use App\Models\Kassa;
 use App\Models\Klinika;
 use App\Models\LogHisseCedvel;
 use App\Models\LogSatis;
@@ -16,12 +17,14 @@ use App\Http\Requests\UpdateSatisRequest;
 use App\Models\SatisDetallari;
 use App\Models\SatisUsulu;
 use App\Models\User;
+use App\Traits\WhatsappMessenger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Validation\Rule;
 
 class SatisController extends Controller
 {
+    use WhatsappMessenger;
     public function satisEt($id)
     {
         $satis_usulu = SatisUsulu::findOrFail($id);
@@ -571,6 +574,7 @@ class SatisController extends Controller
                 'ilkin_odenis'=>$request->satis_usulu_id == 3 ? $request->ilkin_odenis :$total
             ]);
 
+
             foreach ($request->sebet as $key=>$mehsul)
             {
                 $dbMehsul = Mehsul::findOrFail($key);
@@ -611,6 +615,15 @@ class SatisController extends Controller
                     $n++;
                 }
             }
+
+            $message = auth()->user()->name.' adlı '.auth()->user()->vezife->ad.'<a href="'.route('front.xronoliji',['id'=>$satis->id]).'">№ '.sprintf('%09d',$satis->id).'</a>  müqaviləsi üzrə '.$satis->satis_usulu->ad.' satış edərək, kassaya '.($request->satis_usulu_id == 3 ? $request->ilkin_odenis :$total).' AZN pul daxil etdi';
+            Kassa::create([
+                'operation_id'=>$request->satis_usulu_id,
+                'pul'=>$request->satis_usulu_id == 3 ? $request->ilkin_odenis :$total,
+                'description'=>$message
+            ]);
+
+            $this->sender(urlencode($message));
         }
 
     }

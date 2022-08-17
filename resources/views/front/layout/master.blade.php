@@ -17,20 +17,25 @@
 {{--    <link href="{{ asset('back/dist/css/demo.min.css') }}" rel="stylesheet"/>--}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
     <style>
-        /*.footer-transparent {*/
-        /*    margin-top: 0;*/
-        /*    position: fixed;*/
-        /*    left: 0;*/
-        /*    bottom: 0;*/
-        /*    width: 100%;*/
-        /*    background-color: #232E3C;*/
-        /*    color: white;*/
-        /*    text-align: center;*/
-        /*}*/
+        .footer-transparent {
+            margin-top: 0;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #232E3C;
+            color: white;
+            text-align: center;
+        }
 
         @if(\Illuminate\Support\Facades\Cookie::get('mode'))
         .dataTables_wrapper .dataTables_length select, table.dataTable tbody tr, .select2-container--default .select2-selection--single,.select2-results{
             background-color: #232E3C !important;
+        }
+
+        .theme-dark .form-check-input:not(:checked), .theme-dark .form-control, .theme-dark .form-file-text, .theme-dark .form-imagecheck-figure:before, .theme-dark .form-select, .theme-dark .form-selectgroup-check, .theme-dark .form-selectgroup-label {
+            background-color: #ffffff !important;
+            color: #000000;
         }
 
         .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -43,6 +48,8 @@
                     color: #000000 !important;
                 }
             }
+
+
         @endif
 
         .select2-container--default .select2-selection--single {

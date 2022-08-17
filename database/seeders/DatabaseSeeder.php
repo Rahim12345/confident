@@ -27,9 +27,9 @@ class DatabaseSeeder extends Seeder
             KateqoriyaSeeder::class,
             MarkaSeeder::class,
             SatisUsuluSeeder::class,
-//            MehsulSeeder::class,
+            MehsulSeeder::class,
             OperationSeeder::class,
-            KassaSeeder::class,
+//            KassaSeeder::class,
         ]);
     }
 }

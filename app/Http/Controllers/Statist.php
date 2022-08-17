@@ -14,6 +14,7 @@ class Statist extends Controller
      */
     public function index()
     {
+
         $umumi =  DB::select('
         select
         sum(pul) as total,
@@ -21,6 +22,7 @@ class Statist extends Controller
         from kassas as k
         left join operations as o on o.id=k.operation_id group by giris_ve_ya_cixis
         ');
+
 
         $totalUmumi = 0;
         if (count($umumi) == 0)
@@ -36,6 +38,32 @@ class Statist extends Controller
             $totalUmumi = $umumi[0]->total - $umumi[1]->total;
         }
 
+        $buay =  DB::select('
+        select
+        sum(pul) as total,
+        giris_ve_ya_cixis
+        from kassas as k
+        left join operations as o on o.id=k.operation_id  where
+        MONTH(k.updated_at) = MONTH(CURRENT_DATE())
+AND YEAR(k.updated_at) = YEAR(CURRENT_DATE())
+        group by giris_ve_ya_cixis
+        ');
+
+        $totalAy = 0;
+        if (count($buay) == 0)
+        {
+            $totalAy = 0;
+        }
+        elseif (count($buay) == 1)
+        {
+            $totalAy = $buay[0]->total;
+        }
+        elseif (count($buay) == 2)
+        {
+            $totalAy = $buay[0]->total - $buay[1]->total;
+        }
+
+
         $bugun =  DB::select('
         select
         sum(pul) as total,
@@ -44,6 +72,8 @@ class Statist extends Controller
         left join operations as o on o.id=k.operation_id  where  date(k.updated_at) = date(CURRENT_DATE)
         group by giris_ve_ya_cixis
         ');
+
+
 
         $totalBugun = 0;
         if (count($bugun) == 0)
@@ -59,8 +89,7 @@ class Statist extends Controller
             $totalBugun = $bugun[0]->total - $bugun[1]->total;
         }
 
-        dd($totalBugun);
-        return view('back.pages.dashboard');
+        return view('back.pages.dashboard',compact('totalUmumi','totalAy','totalBugun'));
     }
 
     /**

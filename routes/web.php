@@ -72,6 +72,8 @@ Route::group(['prefix'=>'admin','middleware'=>['auth', 'locale']],function (){
     Route::resource('vahid', VahidController::class);
     Route::resource('operation', EmeliyyatNovuController::class);
     Route::resource('mehsul', MehsulController::class);
+
+    Route::resource('admin-muqavileler', MuqavilelerController::class);
 });
 
 

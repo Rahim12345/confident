@@ -15,9 +15,9 @@
                     <div class="d-flex align-items-center" bis_skin_checked="1">
                         <div class="subheader" bis_skin_checked="1" _msthash="3929003" _msttexthash="121056" style="text-align: left;">Kassa</div>
                     </div>
-                    <div class="h1 mb-3" bis_skin_checked="1" _msthash="3387241" _msttexthash="14846" style="text-align: left;">Ümumi - 75%</div>
-                    <div class="h1 mb-3" bis_skin_checked="1" _msthash="3387241" _msttexthash="14846" style="text-align: left;">Bu ay - 75%</div>
-                    <div class="h1 mb-3" bis_skin_checked="1" _msthash="3387241" _msttexthash="14846" style="text-align: left;">Bu gün - 75</div>
+                    <div class="h1 mb-3" bis_skin_checked="1" _msthash="3387241" _msttexthash="14846" style="text-align: left;">Ümumi - {{ $totalUmumi }} AZN</div>
+                    <div class="h1 mb-3" bis_skin_checked="1" _msthash="3387241" _msttexthash="14846" style="text-align: left;">Bu ay - {{ $totalAy }} AZN</div>
+                    <div class="h1 mb-3" bis_skin_checked="1" _msthash="3387241" _msttexthash="14846" style="text-align: left;">Bu gün - {{ $totalBugun }} AZN</div>
                 </div>
             </div>
         </div>

@@ -16,11 +16,11 @@ class OperationSeeder extends Seeder
     {
         $operations = [
             [
-                'name'=>'NAĞD SATIŞ',
+                'name'=>'TOPDAN SATIŞ',
                 'giris_ve_ya_cixis'=>1,
             ],
             [
-                'name'=>'TOPDAN SATIŞ',
+                'name'=>'NAĞD SATIŞ',
                 'giris_ve_ya_cixis'=>1,
             ],
             [
@@ -28,8 +28,8 @@ class OperationSeeder extends Seeder
                 'giris_ve_ya_cixis'=>1,
             ],
             [
-                'name'=>'YOL XƏRCİ',
-                'giris_ve_ya_cixis'=>2,
+                'name'=>'KREDİTLƏ SATIŞ',
+                'giris_ve_ya_cixis'=>1,
             ]
         ];
 

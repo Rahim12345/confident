@@ -16,7 +16,7 @@ class KassaSeeder extends Seeder
     public function run()
     {
         $faker = Factory::create();
-        for ($i=0;$i<10;$i++)
+        for ($i=0;$i<10000;$i++)
         {
             $tarix = $faker->unique()->dateTimeBetween($startDate = '-2 days', $endDate = '+ 1 day');
             Kassa::create([

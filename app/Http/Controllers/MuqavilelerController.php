@@ -27,10 +27,20 @@ class MuqavilelerController extends Controller
     {
         if($request->ajax())
         {
-            $data = Satis::with('satis_usulu','satici')
-                ->where('satici_id',auth()->user()->id)
-                ->latest()
-                ->get();
+            if (auth()->user()->id == 1)
+            {
+                $data = Satis::with('satis_usulu','satici')
+                    ->latest()
+                    ->get();
+            }
+            else
+            {
+                $data = Satis::with('satis_usulu','satici')
+                    ->where('satici_id',auth()->user()->id)
+                    ->latest()
+                    ->get();
+            }
+
 
             return DataTables::of($data)
 
@@ -132,7 +142,15 @@ class MuqavilelerController extends Controller
 
                 ->make(true);
         }
-        return view('front.pages.muqavile.index');
+
+        if (auth()->user()->id == 1)
+        {
+            return view('back.pages.muqavile.index');
+        }
+        else
+        {
+            return view('front.pages.muqavile.index');
+        }
     }
 
     /**
@@ -250,17 +268,40 @@ class MuqavilelerController extends Controller
     {
         if ($log_id)
         {
-            $cariSatis          = LogSatis::where('satici_id', auth()->user()->id)->with('satis_usulu','satici','details','hisse_cedvels')->findOrFail($log_id);
+            if (auth()->user()->id == 1)
+            {
+                $cariSatis          = LogSatis::with('satis_usulu','satici','details','hisse_cedvels')->findOrFail($log_id);
+            }
+            else
+            {
+                $cariSatis          = LogSatis::where('satici_id', auth()->user()->id)->with('satis_usulu','satici','details','hisse_cedvels')->findOrFail($log_id);
+            }
+
         }
         else
         {
-            $cariSatis          = Satis::where('satici_id', auth()->user()->id)->with('satis_usulu','satici','details','hisse_cedvels')->findOrFail($id);
+            if (auth()->user()->id == 1)
+            {
+                $cariSatis          = Satis::with('satis_usulu','satici','details','hisse_cedvels')->findOrFail($id);
+            }
+            else
+            {
+                $cariSatis          = Satis::where('satici_id', auth()->user()->id)->with('satis_usulu','satici','details','hisse_cedvels')->findOrFail($id);
+            }
+
         }
 //        dd($cariSatis);
 
         $arxivSatislari         = LogSatis::with('satis_usulu','satici','details','hisse_cedvels')->orderBy('id','desc')->where('satis_id',$id)->get();
 
-        return view('front.pages.satis.xronoloji',compact('cariSatis','arxivSatislari'));
+        if (auth()->user()->id == 1)
+        {
+            return view('back.pages.satis.xronoloji',compact('cariSatis','arxivSatislari'));
+        }
+        else
+        {
+            return view('front.pages.satis.xronoloji',compact('cariSatis','arxivSatislari'));
+        }
     }
 
     /**
