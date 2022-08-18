@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HisseCedvel;
+use App\Models\Kassa;
 use App\Models\Klinika;
 use App\Models\LogSatis;
 use App\Models\LogSatisDetallari;
@@ -11,6 +12,7 @@ use App\Models\Partnyor;
 use App\Models\Satis;
 use App\Models\SatisUsulu;
 use App\Models\User;
+use App\Traits\WhatsappMessenger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cookie;
@@ -18,6 +20,7 @@ use Yajra\DataTables\DataTables;
 
 class MuqavilelerController extends Controller
 {
+    use WhatsappMessenger;
     /**
      * Display a listing of the resource.
      *
@@ -121,19 +124,21 @@ class MuqavilelerController extends Controller
                 ->addColumn('action',function ($row){
                     return '
                     <div class="btn-list flex-nowrap">
-                        '.($row->details()->count() > 0 ? ' <a href="'.route('muqavileler.edit',$row->id).'" class="btn btn-primary">
+                        '.($row->details()->count() > 0 ? ' <a href="'.route('muqavileler.edit',$row->id).'" style="display: '.(auth()->user()->id == 1 ? 'none' : '').'" class="btn btn-primary">
                             <i class="fa fa-pen"></i>
                         </a> ' : '').'
                         <a href="'.route('front.xronoliji',$row->id).'" class="btn btn-info">
                             Xronloji
                         </a>
-                        '.($row->details()->count() > 0 ? '<div class="">
+                        '.($row->details()->count() > 0 ? '<div class=""  style="display: '.(auth()->user()->id == 1 ? 'none' : '').'">
                             <form action="'.route('muqavileler.destroy',$row->id).'" method="POST">
                                 '.csrf_field().'
                                 '.method_field('DELETE').'
                                 <button class="btn btn-danger" type="submit" onclick="return confirm(\'Müqaviləni ləğv etmək istədiyinizdən əminsiniz?\')">Tam iadə</button>
                             </form>
-                        </div>' : '').'
+                        </div>' : '').($row->satis_usulu_id == 3 ? '<a href="'.route('front.pay',$row->id).'" class="btn btn-info">
+                            <i class="fa fa-coins"></i>
+                        </a>' : '').'
                     </div>
                     ';
                 })
@@ -302,6 +307,97 @@ class MuqavilelerController extends Controller
         {
             return view('front.pages.satis.xronoloji',compact('cariSatis','arxivSatislari'));
         }
+    }
+
+    public function pay($id, $log_id = null)
+    {
+        if ($log_id)
+        {
+            if (auth()->user()->id == 1)
+            {
+                $cariSatis          = LogSatis::with('satis_usulu','satici','details','hisse_cedvels')->where('satis_usulu_id',3)->findOrFail($log_id);
+            }
+            else
+            {
+                $cariSatis          = LogSatis::where('satis_usulu_id',3)->where('satici_id', auth()->user()->id)->with('satis_usulu','satici','details','hisse_cedvels')->findOrFail($log_id);
+            }
+
+        }
+        else
+        {
+            if (auth()->user()->id == 1)
+            {
+                $cariSatis          = Satis::with('satis_usulu','satici','details','hisse_cedvels')->where('satis_usulu_id',3)->findOrFail($id);
+            }
+            else
+            {
+                $cariSatis          = Satis::where('satis_usulu_id',3)->where('satici_id', auth()->user()->id)->with('satis_usulu','satici','details','hisse_cedvels')->findOrFail($id);
+            }
+
+        }
+//        dd($cariSatis);
+
+        $arxivSatislari         = LogSatis::with('satis_usulu','satici','details','hisse_cedvels')->orderBy('id','desc')->where('satis_id',$id)->get();
+
+        if (auth()->user()->id == 1)
+        {
+            return view('back.pages.satis.xronoloji',compact('cariSatis','arxivSatislari'));
+        }
+        else
+        {
+            return view('front.pages.satis.pay',compact('cariSatis','arxivSatislari'));
+        }
+    }
+
+    public function payStore(Request $request)
+    {
+        $this->validate($request,[
+           'odenilen_mebleg'=>'array',
+           'odenilen_mebleg.*'=>'numeric',
+        ]);
+
+        $satis                      = Satis::with('hisse_cedvels')->findOrFail($request->satis_id);
+
+        $yeni_edilmis_odenisler     = array_sum($request->edilen_odenisler);
+        $kohne_edilmis_odenisler    = $satis->hisse_cedvels->sum('odenilen_mebleg');
+        $muqaviledekiPulFerqi       = $yeni_edilmis_odenisler - $kohne_edilmis_odenisler;
+//        dd($yeni_edilmis_odenisler.'-'.$kohne_edilmis_odenisler);
+        if($yeni_edilmis_odenisler < $kohne_edilmis_odenisler)
+        {
+            return response()->json([
+                'errors'=>[
+                    'odenisde_azalama'=>'Ödəniş edərkən ödəniş cədvəlindəki ödənişlərin cəmi, əvvəlki ödənişlərin cəmində çox olmalıdır'
+                ]
+            ],422);
+        }
+
+        $n      = 0;
+        foreach ($satis->hisse_cedvels as $row)
+        {
+            $row->update([
+                'odenilen_mebleg'=>$request->edilen_odenisler[$n],
+                'serh'=>$request->description[$n],
+            ]);
+            $n++;
+        }
+
+        $myMessage = '';
+        if ($muqaviledekiPulFerqi > 0)
+        {
+            $myMessage = 'Ödəniş edildi, yönləndirilirsiniz ...';
+            $message = auth()->user()->name.' adlı '.auth()->user()->vezife->ad.' № '.sprintf('%09d',$satis->id).'  müqaviləsi üzrə '.$satis->satis_usulu->ad.' satışı üzrə ödəniş etdi və nəticədə kassaya '.round(abs($muqaviledekiPulFerqi),2).' AZN pul daxil etdi .Ətraflı > '.route('front.xronoliji',['id'=>$satis->id]);
+            Kassa::create([
+                'operation_id'=>3,
+                'pul'=>abs($muqaviledekiPulFerqi),
+                'description'=>$message
+            ]);
+
+            $this->sender(urlencode($message));
+        }
+
+        return response()->json([
+            'message'=>$myMessage
+        ],200);
     }
 
     /**

@@ -557,6 +557,24 @@ class SatisController extends Controller
                 }
             }
 
+            if ($request->satis_usulu_id == 3)
+            {
+                $muqaviledekiPulFerqi = $old_satis->ilkin_odenis + $old_satis->hisse_cedvels->sum('odenilen_mebleg') - $request->ilkin_odenis;
+            }
+            else
+            {
+                $muqaviledekiPulFerqi = $old_satis->ilkin_odenis - $request->ilkin_odenis;
+            }
+
+            $message = auth()->user()->name.' adlı '.auth()->user()->vezife->ad.'№ '.sprintf('%09d',$old_satis->id).'  müqaviləsi üzrə '.$old_satis->satis_usulu->ad.' satışı redaktə etdi və nəticədə kassada '.abs($muqaviledekiPulFerqi).' AZN pul '.($muqaviledekiPulFerqi > 0 ? 'daxil etdi' : 'müstəriyə verdi'  ).'.Ətraflı > '.route('front.xronoliji',['id'=>$old_satis->id]);
+            Kassa::create([
+                'operation_id'=>$request->satis_usulu_id + 4,
+                'pul'=>abs($muqaviledekiPulFerqi),
+                'description'=>$message
+            ]);
+
+            $this->sender(urlencode($message));
+
         }
         else
         {
@@ -616,7 +634,7 @@ class SatisController extends Controller
                 }
             }
 
-            $message = auth()->user()->name.' adlı '.auth()->user()->vezife->ad.'<a href="'.route('front.xronoliji',['id'=>$satis->id]).'">№ '.sprintf('%09d',$satis->id).'</a>  müqaviləsi üzrə '.$satis->satis_usulu->ad.' satış edərək, kassaya '.($request->satis_usulu_id == 3 ? $request->ilkin_odenis :$total).' AZN pul daxil etdi';
+            $message = auth()->user()->name.' adlı '.auth()->user()->vezife->ad.'№ '.sprintf('%09d',$satis->id).'  müqaviləsi üzrə '.$satis->satis_usulu->ad.' satış edərək, kassaya '.($request->satis_usulu_id == 3 ? $request->ilkin_odenis :$total).' AZN pul daxil etdi.Ətraflı > '.route('front.xronoliji',['id'=>$satis->id]);
             Kassa::create([
                 'operation_id'=>$request->satis_usulu_id,
                 'pul'=>$request->satis_usulu_id == 3 ? $request->ilkin_odenis :$total,

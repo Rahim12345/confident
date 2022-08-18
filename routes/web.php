@@ -113,6 +113,12 @@ Route::group(['prefix'=>'satici','middleware'=>['auth', 'locale']],function (){
 
     Route::get('xronoliji/{id}/{log_id?}', [MuqavilelerController::class,'xronoliji'])
         ->name('front.xronoliji');
+
+    Route::get('pay/{id}/{log_id?}', [MuqavilelerController::class,'pay'])
+        ->name('front.pay');
+
+    Route::post('pay-store', [MuqavilelerController::class,'payStore'])
+        ->name('front.pay.store');
 });
 
 Route::get('test', function (){
