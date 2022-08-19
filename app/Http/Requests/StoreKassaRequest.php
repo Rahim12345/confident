@@ -13,7 +13,7 @@ class StoreKassaRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,18 @@ class StoreKassaRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'operation_id'=>'required|exists:operations,id',
+            'pul'=>'numeric|between:0.01,999999999.99',
+            'description'=>'nullable|max:60000'
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'operation_id'=>'Operation',
+            'pul'=>'Pul',
+            'description'=>'Təsvir'
         ];
     }
 }

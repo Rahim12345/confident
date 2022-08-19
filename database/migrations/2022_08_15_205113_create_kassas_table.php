@@ -18,6 +18,8 @@ class CreateKassasTable extends Migration
             $table->integer('operation_id');
             $table->decimal('pul',10,2);
             $table->text('description')->nullable();
+            $table->boolean('system')->default(1)->comment('0 - manual, 1 - system');
+            $table->integer('satici_id');
             $table->timestamps();
         });
     }

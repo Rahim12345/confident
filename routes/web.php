@@ -5,6 +5,7 @@ use App\Http\Controllers\HekimController;
 use App\Http\Controllers\HekimVezifeController;
 use App\Http\Controllers\IsciController;
 use App\Http\Controllers\IstehsalciController;
+use App\Http\Controllers\KassaController;
 use App\Http\Controllers\KateqoriyaController;
 use App\Http\Controllers\KlinikaController;
 use App\Http\Controllers\MagazaController;
@@ -71,6 +72,7 @@ Route::group(['prefix'=>'admin','middleware'=>['auth', 'locale']],function (){
     Route::resource('model', MarkaController::class);
     Route::resource('vahid', VahidController::class);
     Route::resource('operation', EmeliyyatNovuController::class);
+    Route::resource('kassa', KassaController::class);
     Route::resource('mehsul', MehsulController::class);
 
     Route::resource('admin-muqavileler', MuqavilelerController::class);

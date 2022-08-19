@@ -401,7 +401,8 @@ class MuqavilelerController extends Controller
             Kassa::create([
                 'operation_id'=>3,
                 'pul'=>abs($muqaviledekiPulFerqi),
-                'description'=>$message
+                'description'=>$message,
+                'satici_id'=>auth()->user()->id
             ]);
 
             $this->sender(urlencode($message));
@@ -489,7 +490,8 @@ class MuqavilelerController extends Controller
         Kassa::create([
             'operation_id'=>$old_satis->satis_usulu_id,
             'pul'=>$muqaviledekiPulFerqi * (-1),
-            'description'=>$message
+            'description'=>$message,
+            'satici_id'=>auth()->user()->id
         ]);
 
         $this->sender(urlencode($message));

@@ -29,17 +29,21 @@ class UpdateEmeliyyatNovuRequest extends FormRequest
             'ad'=>[
                 'required',
                 'max:200',
-                Rule::unique('emeliyyat_novus','ad')->where(function ($query) use ($request) {
+                Rule::unique('operations','name')->where(function ($query) use ($request) {
                     return $query->where('id','!=',$request->segment('3'));
                 })
             ],
+            'description'=>'nullable|max:10000',
+            'giris_ve_ya_cixis'=>['required',Rule::in([1,2])],
         ];
     }
 
     public function attributes()
     {
         return [
-            'ad'=>'Ad'
+            'ad'=>'Ad',
+            'description'=>'Təsvir',
+            'giris_ve_ya_cixis'=>'Status'
         ];
     }
 }

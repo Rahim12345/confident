@@ -305,6 +305,16 @@
                         </span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('kassa.index') }}" >
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="fa fa-coins"></i>
+                        </span>
+                        <span class="nav-link-title">
+                        Kassa
+                        </span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

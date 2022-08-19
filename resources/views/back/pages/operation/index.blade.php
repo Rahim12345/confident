@@ -19,6 +19,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Ad</th>
+                                <th>Status</th>
                                 <th class="w-1"></th>
                             </tr>
                             </thead>
@@ -34,9 +35,13 @@
                                     {{ $loop->iteration }}
                                 </td>
                                 <td data-label="Ad" >
-                                    <div>{{ $item->ad }}</div>
+                                    <div>{{ $item->name }}</div>
+                                </td>
+                                <td data-label="Ad" >
+                                    <div>{{ $item->giris_ve_ya_cixis == 1 ? 'giriş' : 'çıxış' }}</div>
                                 </td>
                                 <td>
+                                    @if($item->id > 5)
                                     <div class="btn-list flex-nowrap">
                                         <a href="{{ route('operation.edit',$item->id) }}" class="btn btn-primary">
                                             <i class="fa fa-pen"></i>
@@ -49,6 +54,7 @@
                                             </form>
                                         </div>
                                     </div>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach

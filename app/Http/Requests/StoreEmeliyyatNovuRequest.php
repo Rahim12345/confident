@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreEmeliyyatNovuRequest extends FormRequest
 {
@@ -24,14 +25,18 @@ class StoreEmeliyyatNovuRequest extends FormRequest
     public function rules()
     {
         return [
-            'ad'=>'required|max:200|unique:emeliyyat_novus,ad'
+            'ad'=>'required|max:200|unique:operations,name',
+            'description'=>'nullable|max:10000',
+            'giris_ve_ya_cixis'=>['required',Rule::in([1,2])],
         ];
     }
 
     public function attributes()
     {
         return [
-            'ad'=>'Ad'
+            'ad'=>'Ad',
+            'description'=>'Təsvir',
+            'giris_ve_ya_cixis'=>'Status',
         ];
     }
 }

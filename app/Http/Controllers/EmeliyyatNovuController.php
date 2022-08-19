@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EmeliyyatNovu;
 use App\Http\Requests\StoreEmeliyyatNovuRequest;
 use App\Http\Requests\UpdateEmeliyyatNovuRequest;
+use App\Models\Operation;
 
 class EmeliyyatNovuController extends Controller
 {
@@ -16,7 +17,7 @@ class EmeliyyatNovuController extends Controller
     public function index()
     {
         return view('back.pages.operation.index',[
-            'operations'=>EmeliyyatNovu::latest()->get()
+            'operations'=>Operation::orderBy('id','desc')->get()
         ]);
     }
 
@@ -38,8 +39,10 @@ class EmeliyyatNovuController extends Controller
      */
     public function store(StoreEmeliyyatNovuRequest $request)
     {
-        EmeliyyatNovu::create([
-            'ad'=>$request->ad
+        Operation::create([
+            'name'=>$request->ad,
+            'description'=>$request->description,
+            'giris_ve_ya_cixis'=>$request->giris_ve_ya_cixis,
         ]);
 
         toastr()->success('Əlavə edildi',env('xitab'));
@@ -66,7 +69,7 @@ class EmeliyyatNovuController extends Controller
      */
     public function edit($id)
     {
-        $emeliyyatNovu = EmeliyyatNovu::findOrFail($id);
+        $emeliyyatNovu = Operation::where('id','>',5)->findOrFail($id);
         return view('back.pages.operation.edit',[
             'item'=>$emeliyyatNovu
         ]);
@@ -81,9 +84,11 @@ class EmeliyyatNovuController extends Controller
      */
     public function update(UpdateEmeliyyatNovuRequest $request, $id)
     {
-        $emeliyyatNovu = EmeliyyatNovu::findOrFail($id);
+        $emeliyyatNovu = Operation::findOrFail($id);
         $emeliyyatNovu->update([
-            'ad'=>$request->ad
+            'name'=>$request->ad,
+            'description'=>$request->description,
+            'giris_ve_ya_cixis'=>$request->giris_ve_ya_cixis,
         ]);
 
         toastr()->success('Redatə edildi',env('xitab'));
@@ -99,7 +104,7 @@ class EmeliyyatNovuController extends Controller
      */
     public function destroy($id)
     {
-        $emeliyyatNovu = EmeliyyatNovu::findOrFail($id);
+        $emeliyyatNovu = Operation::where('id','>',5)->findOrFail($id);
         $emeliyyatNovu->delete();
 
         toastr()->success('Silindi',env('xitab'));
