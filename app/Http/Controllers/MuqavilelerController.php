@@ -16,6 +16,7 @@ use App\Traits\WhatsappMessenger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class MuqavilelerController extends Controller
@@ -136,7 +137,7 @@ class MuqavilelerController extends Controller
                                 '.method_field('DELETE').'
                                 <button class="btn btn-danger" type="submit" onclick="return confirm(\'Müqaviləni ləğv etmək istədiyinizdən əminsiniz?\')">Tam iadə</button>
                             </form>
-                        </div>' : '').($row->satis_usulu_id == 3 ? '<a href="'.route('front.pay',$row->id).'" class="btn btn-info">
+                        </div>' : '').($row->satis_usulu_id == 3 ? '<a href="'.route('front.pay',$row->id).'" class="btn btn-info" style="display: '.($row->details()->count() > 0 ? '' : 'none').'">
                             <i class="fa fa-coins"></i>
                         </a>' : '').'
                     </div>
@@ -360,8 +361,19 @@ class MuqavilelerController extends Controller
 
         $yeni_edilmis_odenisler     = array_sum($request->edilen_odenisler);
         $kohne_edilmis_odenisler    = $satis->hisse_cedvels->sum('odenilen_mebleg');
+        $qalan_borc                 = $satis->details()->sum(DB::raw('qutu_sayi * qutusunun_faktiki_satildigi_qiymet + satis_miqdari_ededle * bir_ededinin_faktiki_satildigi_qiymeti')) -
+                                        $satis->ilkin_odenis - $kohne_edilmis_odenisler;
         $muqaviledekiPulFerqi       = $yeni_edilmis_odenisler - $kohne_edilmis_odenisler;
 //        dd($yeni_edilmis_odenisler.'-'.$kohne_edilmis_odenisler);
+        if ($qalan_borc < $yeni_edilmis_odenisler)
+        {
+            return response()->json([
+                'errors'=>[
+                    'borcdan_artiq'=>'Qalan borcdan('.$qalan_borc.' AZN) çox ödəniş etməyə çalışmıyın'
+                ]
+            ],422);
+        }
+
         if($yeni_edilmis_odenisler < $kohne_edilmis_odenisler)
         {
             return response()->json([
@@ -421,6 +433,16 @@ class MuqavilelerController extends Controller
     public function destroy($id)
     {
         $old_satis  = Satis::with('details')->findOrFail($id);
+
+        if ($old_satis->satis_usulu_id == 3)
+        {
+            $muqaviledekiPulFerqi = $old_satis->ilkin_odenis + $old_satis->hisse_cedvels->sum('odenilen_mebleg');
+        }
+        else
+        {
+            $muqaviledekiPulFerqi = $old_satis->ilkin_odenis;
+        }
+
         $log_satis  = LogSatis::create([
             'satis_id'=>$old_satis->id,
             'satis_usulu_id'=>$old_satis->satis_usulu_id,
@@ -463,5 +485,16 @@ class MuqavilelerController extends Controller
            'ilkin_odenis'=>0
         ]);
 
+        $message = auth()->user()->name.' adlı '.auth()->user()->vezife->ad.' № '.sprintf('%09d',$old_satis->id).'  müqaviləsi üzrə '.$old_satis->satis_usulu->ad.' satışını tam iadə etdi və nəticədə kassadan '.$muqaviledekiPulFerqi.' AZN pul müstəriyə verdi.Ətraflı > '.route('front.xronoliji',['id'=>$old_satis->id]);
+        Kassa::create([
+            'operation_id'=>$old_satis->satis_usulu_id,
+            'pul'=>$muqaviledekiPulFerqi * (-1),
+            'description'=>$message
+        ]);
+
+        $this->sender(urlencode($message));
+
+        toastr()->success('Müqavilə tam iadə olundu');
+        return  back();
     }
 }

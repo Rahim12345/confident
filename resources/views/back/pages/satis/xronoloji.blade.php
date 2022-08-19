@@ -134,6 +134,10 @@
                         @endforeach
                         @if($cariSatis->satis_usulu_id == 3)
                             <tr>
+                                <td class="bg-danger"><label for="ilkin_odenis" style="color: #FFFFFF">İlkin ödəniş</label></td>
+                                <td colspan="4"><input type="number" name="ilkin_odenis" id="ilkin_odenis" value="{{ $cariSatis->ilkin_odenis }}" min="0" max="999999" step=".01" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" onkeypress="return isNumberKey(event);" onkeyup="this.value.trim() == '' ? (this.value = 1) : (this.value = this.value) " disabled></td>
+                            </tr>
+                            <tr>
                                 <td colspan="5" style="background-color: green !important;font-weight: bold;color: #FFFFFF !important;">Ödəniş Cədvəli</td>
                             </tr>
                             @foreach($cariSatis->hisse_cedvels as $row)

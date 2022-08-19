@@ -32,22 +32,6 @@ class OperationSeeder extends Seeder
                 'giris_ve_ya_cixis'=>1,
             ],
             [
-                'name'=>'TOPDAN SATIŞ(İADƏ)',
-                'giris_ve_ya_cixis'=>2,
-            ],
-            [
-                'name'=>'NAĞD SATIŞ(İADƏ)',
-                'giris_ve_ya_cixis'=>2,
-            ],
-            [
-                'name'=>'HİSSƏ-HİSSƏ SATIŞ(İADƏ)',
-                'giris_ve_ya_cixis'=>2,
-            ],
-            [
-                'name'=>'KREDİTLƏ SATIŞ(İADƏ)',
-                'giris_ve_ya_cixis'=>2,
-            ],
-            [
                 'name'=>'HİSSƏ-HİSSƏ SATIŞ(AYLIQ)',
                 'giris_ve_ya_cixis'=>1,
             ]

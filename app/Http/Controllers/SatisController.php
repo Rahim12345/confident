@@ -463,6 +463,7 @@ class SatisController extends Controller
         if ($request->has('crud'))
         {
             $old_satis  = Satis::with('details')->findOrFail($request->satis_id);
+
             $log_satis  = LogSatis::create([
                 'satis_id'=>$old_satis->id,
                 'satis_usulu_id'=>$old_satis->satis_usulu_id,
@@ -496,6 +497,7 @@ class SatisController extends Controller
                         'log_satis_id'=>$log_satis->id,
                         'satis_id'=>$row->satis_id,
                         'odenis_tarixi'=>$row->odenis_tarixi,
+                        'odenilen_mebleg'=>$row->odenilen_mebleg,
                         'serh'=>$row->serh,
                     ]);
                 }
@@ -508,12 +510,21 @@ class SatisController extends Controller
                 $total  += $mehsul['qutu_sayi'] * $mehsul['qutusunun_qiymeti'] + $mehsul['ededle_sayi'] * $mehsul['bir_ededinin_qiymeti'];
             }
 
+            if ($request->satis_usulu_id == 3)
+            {
+                $muqaviledekiPulFerqi = $request->ilkin_odenis - ($old_satis->ilkin_odenis + $old_satis->hisse_cedvels->sum('odenilen_mebleg'));
+            }
+            else
+            {
+                $muqaviledekiPulFerqi = $total - $old_satis->ilkin_odenis;
+            }
+
             $old_satis->update([
                 'satis_usulu_id'=>$request->satis_usulu_id,
                 'musteri_novu'=>$request->alici_kateqoriya_id,
                 'musterinin_id'=>$request->musterinin_id,
                 'satici_id'=>auth()->user()->id,
-                'ilkin_odenis'=>$request->satis_usulu_id == 3 ? $request->ilkin_odenis :$total
+                'ilkin_odenis'=>$request->satis_usulu_id == 3 ? $request->ilkin_odenis : $total
             ]);
 
             foreach ($request->sebet as $key=>$mehsul)
@@ -557,19 +568,12 @@ class SatisController extends Controller
                 }
             }
 
-            if ($request->satis_usulu_id == 3)
-            {
-                $muqaviledekiPulFerqi = $old_satis->ilkin_odenis + $old_satis->hisse_cedvels->sum('odenilen_mebleg') - $request->ilkin_odenis;
-            }
-            else
-            {
-                $muqaviledekiPulFerqi = $old_satis->ilkin_odenis - $request->ilkin_odenis;
-            }
 
-            $message = auth()->user()->name.' adlı '.auth()->user()->vezife->ad.'№ '.sprintf('%09d',$old_satis->id).'  müqaviləsi üzrə '.$old_satis->satis_usulu->ad.' satışı redaktə etdi və nəticədə kassada '.abs($muqaviledekiPulFerqi).' AZN pul '.($muqaviledekiPulFerqi > 0 ? 'daxil etdi' : 'müstəriyə verdi'  ).'.Ətraflı > '.route('front.xronoliji',['id'=>$old_satis->id]);
+
+            $message = auth()->user()->name.' adlı '.auth()->user()->vezife->ad.' № '.sprintf('%09d',$old_satis->id).'  müqaviləsi üzrə '.$old_satis->satis_usulu->ad.' satışı redaktə etdi və nəticədə '.($muqaviledekiPulFerqi > 0 ? 'kassaya ' : 'kassadan '  ).abs($muqaviledekiPulFerqi).' AZN pul '.($muqaviledekiPulFerqi > 0 ? 'daxil etdi' : 'müstəriyə verdi'  ).'.Ətraflı > '.route('front.xronoliji',['id'=>$old_satis->id]);
             Kassa::create([
-                'operation_id'=>$request->satis_usulu_id + 4,
-                'pul'=>abs($muqaviledekiPulFerqi),
+                'operation_id'=>$request->satis_usulu_id,
+                'pul'=>$muqaviledekiPulFerqi,
                 'description'=>$message
             ]);
 
@@ -634,10 +638,10 @@ class SatisController extends Controller
                 }
             }
 
-            $message = auth()->user()->name.' adlı '.auth()->user()->vezife->ad.'№ '.sprintf('%09d',$satis->id).'  müqaviləsi üzrə '.$satis->satis_usulu->ad.' satış edərək, kassaya '.($request->satis_usulu_id == 3 ? $request->ilkin_odenis :$total).' AZN pul daxil etdi.Ətraflı > '.route('front.xronoliji',['id'=>$satis->id]);
+            $message = auth()->user()->name.' adlı '.auth()->user()->vezife->ad.' № '.sprintf('%09d',$satis->id).'  müqaviləsi üzrə '.$satis->satis_usulu->ad.' satış edərək, kassaya '.($request->satis_usulu_id == 3 ? $request->ilkin_odenis : $total).' AZN pul daxil etdi.Ətraflı > '.route('front.xronoliji',['id'=>$satis->id]);
             Kassa::create([
                 'operation_id'=>$request->satis_usulu_id,
-                'pul'=>$request->satis_usulu_id == 3 ? $request->ilkin_odenis :$total,
+                'pul'=>$request->satis_usulu_id == 3 ? $request->ilkin_odenis : $total,
                 'description'=>$message
             ]);
 

@@ -21,5 +21,18 @@ class userSeeder extends Seeder
             'password'=>bcrypt(12345678),
             'status'=>1
         ]);
+
+        User::create([
+            'name'=>'Rahim Süleymanov',
+            'email'=>'r@mail.ru',
+            'avatar'=>'avatar.jpg',
+            'avatar'=>'avatar.jpg',
+            'klinika_id'=>1,
+            'vezife_id'=>1,
+            'hekim_vezife_id'=>1,
+            'magaza_id'=>1,
+            'password'=>bcrypt(12345678),
+            'status'=>1
+        ]);
     }
 }
