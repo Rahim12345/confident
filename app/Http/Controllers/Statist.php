@@ -73,6 +73,26 @@ AND YEAR(k.updated_at) = YEAR(CURRENT_DATE())
         group by giris_ve_ya_cixis
         ');
 
+        $bugunkiMusteriAdgunuleri =  DB::select('
+        select
+        *
+        from users
+        where MONTH(dogum_gunu) = '.date('m').' and
+        DAY(dogum_gunu) = '.date('d').' and
+        status = 0
+        ');
+
+        $bugunkiPersonalAdgunuleri =  DB::select('
+        select
+        *
+        from users
+        where MONTH(dogum_gunu) = '.date('m').' and
+        DAY(dogum_gunu) = '.date('d').' and
+        status = 1
+        ');
+
+        dd($bugunkiPersonalAdgunuleri);
+
 
 
         $totalBugun = 0;
