@@ -20,6 +20,24 @@ class SaticiMehsullar extends Controller
 
                 ->addIndexColumn()
 
+                ->editColumn('say',function ($row){
+                    $qalan_say = 0;
+                    if ($row->vahid_id == 1)
+                    {
+                        $satilan_qutu_say = $row->satis_details()->sum('qutu_sayi');
+
+                        $satilan_ededle_say = $row->satis_details()->sum('satis_miqdari_ededle');
+
+                        $qalan__ededle_say = $row->say * $row->bir_qutusundaki_say - ($satilan_qutu_say * $row->bir_qutusundaki_say + $satilan_ededle_say);
+                        $qalan_say  = floor($qalan__ededle_say/$row->bir_qutusundaki_say).' qutu,'.($qalan__ededle_say - floor($qalan__ededle_say/$row->bir_qutusundaki_say) * $row->bir_qutusundaki_say) .' ədəd';
+                    }
+                    else
+                    {
+                        $qalan_say = $row->say - $row->satis_details()->sum('satis_miqdari_ededle').' ədəd';
+                    }
+                    return $qalan_say;
+                })
+
                 ->editColumn('firma_id',function ($row){
                     return $row->firma ? $row->firma->ad : '<span class="badge badge-danger" style="background-color: red">Silinib</span>';
                 })

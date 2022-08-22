@@ -15,11 +15,13 @@ class CreateKassasTable extends Migration
     {
         Schema::create('kassas', function (Blueprint $table) {
             $table->id();
+            $table->tinyInteger('operation_type')->default(3);
             $table->integer('operation_id');
             $table->decimal('pul',10,2);
             $table->text('description')->nullable();
             $table->boolean('system')->default(1)->comment('0 - manual, 1 - system');
             $table->integer('satici_id');
+            $table->integer('relational_id')->default(0);
             $table->timestamps();
         });
     }

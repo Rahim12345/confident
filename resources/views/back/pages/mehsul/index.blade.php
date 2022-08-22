@@ -87,6 +87,42 @@
             </div>
         </div>
     </div>
+
+    <div class="modal modal-blur fade" id="modal-team" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Məhsulun adı</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="row g-2">
+                            <div class="col-md-12">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Satıldığı müqavilələrin siyahısı</h3>
+                                    </div>
+                                    <div class="list-group list-group-flush list-group-hoverable myProList">
+
+                                        <div class="list-group-item">
+                                            <div class="row align-items-center">
+                                                <div class="col text-truncate">
+                                                    <a href="#" class="text-body d-block">Paweł Kuna</a>
+                                                    <small class="d-block text-muted text-truncate mt-n1">Change deprecated html tags to text decoration classes (#29604)</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
@@ -119,7 +155,7 @@
                 processing: true,
                 serverSide: true,
                 select: true,
-                "lengthMenu": [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100,'Bütün']],
+                "lengthMenu": [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]],
                 // dom: '<"top"lBf>rt<"bottom"ip><"clear">',
                 buttons: [
                     {
@@ -361,6 +397,25 @@
                 },
                 stateSave: true,
             });
+        });
+
+        $(document).on('click','.proMap', function () {
+            $.ajax({
+                type : 'POST',
+                data : {
+                    id : $(this).attr('data-id')
+                },
+                url : '{!! route('back.pro.map') !!}',
+                success : function (response) {
+                    $('.modal-title').html(response.name);
+                    $('.myProList').html(response.body);
+                },
+                error: function (myErrors) {
+                    $.each(myErrors.responseJSON.errors, function (key, error) {
+                       toastr.error(error);
+                    });
+                }
+            })
         });
 
     </script>

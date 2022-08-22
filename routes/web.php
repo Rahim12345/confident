@@ -75,6 +75,9 @@ Route::group(['prefix'=>'admin','middleware'=>['auth', 'locale']],function (){
     Route::resource('kassa', KassaController::class);
     Route::resource('mehsul', MehsulController::class);
 
+    Route::post('pro-map',[MehsulController::class,'proMap'])
+        ->name('back.pro.map');
+
     Route::resource('admin-muqavileler', MuqavilelerController::class);
 });
 

@@ -91,7 +91,13 @@ AND YEAR(k.updated_at) = YEAR(CURRENT_DATE())
         status = 1
         ');
 
-        dd($bugunkiPersonalAdgunuleri);
+        $son_musteriler = DB::select("
+        SELECT * FROM
+          (SELECT id as client_id,name AS client_name,REPLACE(REPLACE(status, 0, 'hekim'), 1, 'hekim') as client_status,updated_at FROM users WHERE id > 1 UNION SELECT id as client_id,ad  AS client_name,'partnyor',updated_at FROM partnyors UNION SELECT id as client_id,ad  AS client_name,'klinika',updated_at FROM klinikas)
+          AS umumi ORDER BY updated_at DESC LIMIT 20;
+        ");
+
+//        dd($son_musteriler);
 
 
 
@@ -109,7 +115,7 @@ AND YEAR(k.updated_at) = YEAR(CURRENT_DATE())
             $totalBugun = $bugun[0]->total - $bugun[1]->total;
         }
 
-        return view('back.pages.dashboard',compact('totalUmumi','totalAy','totalBugun'));
+        return view('back.pages.dashboard',compact('totalUmumi','totalAy','totalBugun','bugunkiMusteriAdgunuleri','bugunkiPersonalAdgunuleri','son_musteriler'));
     }
 
     /**

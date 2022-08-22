@@ -17,4 +17,9 @@ class SatisDetallari extends Model
     {
         return $this->hasOne(Mehsul::class,'id','mehsul_id');
     }
+
+    public function satis()
+    {
+        return $this->hasOne(Satis::class,'id','satis_id');
+    }
 }

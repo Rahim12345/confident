@@ -365,7 +365,7 @@ class MuqavilelerController extends Controller
                                         $satis->ilkin_odenis - $kohne_edilmis_odenisler;
         $muqaviledekiPulFerqi       = $yeni_edilmis_odenisler - $kohne_edilmis_odenisler;
 //        dd($yeni_edilmis_odenisler.'-'.$kohne_edilmis_odenisler);
-        if ($qalan_borc < $yeni_edilmis_odenisler)
+        if ($qalan_borc < $muqaviledekiPulFerqi)
         {
             return response()->json([
                 'errors'=>[

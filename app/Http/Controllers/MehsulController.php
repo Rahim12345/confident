@@ -10,6 +10,7 @@ use App\Http\Requests\StoreMehsulRequest;
 use App\Http\Requests\UpdateMehsulRequest;
 use App\Models\Partnyor;
 use App\Models\Vahid;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -24,9 +25,27 @@ class MehsulController extends Controller
     {
         if($request->ajax())
         {
-            $data = Mehsul::query()->with(['firma','istehsalci','kateqoriya','marka','vahid']);
+            $data = Mehsul::query()->with(['firma','istehsalci','kateqoriya','marka','vahid','satis_details']);
 
             return DataTables::of($data)
+
+                ->editColumn('say',function ($row){
+                    $qalan_say = 0;
+                    if ($row->vahid_id == 1)
+                    {
+                        $satilan_qutu_say = $row->satis_details()->sum('qutu_sayi');
+
+                        $satilan_ededle_say = $row->satis_details()->sum('satis_miqdari_ededle');
+
+                        $qalan__ededle_say = $row->say * $row->bir_qutusundaki_say - ($satilan_qutu_say * $row->bir_qutusundaki_say + $satilan_ededle_say);
+                        $qalan_say  = floor($qalan__ededle_say/$row->bir_qutusundaki_say).' qutu,'.($qalan__ededle_say - floor($qalan__ededle_say/$row->bir_qutusundaki_say) * $row->bir_qutusundaki_say) .' ədəd';
+                    }
+                    else
+                    {
+                        $qalan_say = $row->say - $row->satis_details()->sum('satis_miqdari_ededle').' ədəd';
+                    }
+                    return $qalan_say;
+                })
 
                 ->editColumn('firma_id',function ($row){
                     return $row->firma ? $row->firma->ad : '<span class="badge badge-danger" style="background-color: red">Silinib</span>';
@@ -73,6 +92,9 @@ class MehsulController extends Controller
                     <div class="btn-list flex-nowrap">
                         <a href="'.route('mehsul.edit',$row->id).'" class="btn btn-primary">
                             <i class="fa fa-pen"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="btn btn-info proMap"  data-bs-toggle="modal" data-bs-target="#modal-team" data-id="'.$row->id.'">
+                            <i class="fa fa-map"></i>
                         </a>
                         <div class="">
                             <form action="'.route('mehsul.destroy',$row->id).'" method="POST">
@@ -277,5 +299,37 @@ class MehsulController extends Controller
         toastr()->success('Silindi',env('xitab'));
 
         return redirect()->route('mehsul.index');
+    }
+
+    public function proMap(Request $request)
+    {
+        $this->validate($request,[
+           'id'=>'required|exists:mehsuls,id'
+        ],[],[
+            'id'=>'Məhsul'
+        ]);
+
+        $mehsul = Mehsul::with('satis_details.satis')->findOrFail($request->id);
+
+        $output = '';
+        foreach ($mehsul->satis_details as $detail)
+        {
+            $output .= '
+            <div class="list-group-item">
+                <div class="row align-items-center">
+                    <div class="col text-truncate">
+                        <a onclick="window.location.href=\''.route('front.xronoliji',['id'=>$detail->satis->id]).'\'" href="javascript:void(0)" class="text-body d-block">№'.sprintf('%09d',$detail->satis->id).'</a>
+                        <small class="d-block text-muted text-truncate mt-n1">'.$detail->satis->satici->name.' ('.$detail->satis->updated_at.')</small>
+                    </div>
+                </div>
+            </div>
+            ';
+        }
+
+
+        return response()->json([
+            'name'=>$mehsul->ad,
+            'body'=>$output
+        ],200);
     }
 }

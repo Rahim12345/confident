@@ -6,6 +6,8 @@ use App\Models\Kassa;
 use App\Http\Requests\StoreKassaRequest;
 use App\Http\Requests\UpdateKassaRequest;
 use App\Models\Operation;
+use App\Models\Partnyor;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\DataTables;
@@ -76,7 +78,9 @@ class KassaController extends Controller
     public function create()
     {
         $operations = Operation::where('id','>',5)->get();
-        return view('back.pages.kassa.create',compact('operations'));
+        $firmas     = Partnyor::orderBy('ad','asc')->get();
+        $personals  = User::where('status',1)->where('id','>',1)->orderBy('name','asc')->get();
+        return view('back.pages.kassa.create',compact('operations','firmas','personals'));
     }
 
     /**
@@ -87,11 +91,25 @@ class KassaController extends Controller
      */
     public function store(StoreKassaRequest $request)
     {
+        if (request()->operation_type == 1)
+        {
+            $relational_id = request()->personal_id;
+        }
+        elseif (request()->operation_type == 2)
+        {
+            $relational_id = request()->firma_id;
+        }
+        else
+        {
+            $relational_id = 0;
+        }
         Kassa::create([
+            'operation_type'=>$request->operation_type,
             'operation_id'=>$request->operation_id,
             'pul'=>$request->pul,
             'description'=>$request->description,
             'satici_id'=>auth()->user()->id,
+            'relational_id'=>$relational_id,
             'system'=>0,
         ]);
 
