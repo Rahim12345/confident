@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Partnyor;
 use App\Http\Requests\StorePartnyorRequest;
 use App\Http\Requests\UpdatePartnyorRequest;
+use Illuminate\Support\Facades\DB;
 
 class PartnyorController extends Controller
 {
@@ -15,7 +16,16 @@ class PartnyorController extends Controller
      */
     public function index()
     {
-        $partnyors = Partnyor::latest()->get();
+//        $partnyors = Partnyor::withSum('mehsuls',"say*maya_deyeri")->latest()->get();
+        $partnyors =  DB::select('
+        select
+            `partnyors`.*,
+            (select sum(`maya_deyeri`*`say`+`qutudaki_1_malin_maya_deyeri`+`bir_qutusundaki_say`) from `mehsuls` where `partnyors`.`id` = `mehsuls`.`firma_id`) as `umumiBorc`,
+            (select sum(`pul`) from `kassas` where `partnyors`.`id` = `kassas`.`relational_id` and operation_type=2) as `verilenBorc`
+        from `partnyors` order by `created_at` desc
+        ');
+        $partnyors = array($partnyors)[0];
+//        dd(array($partnyors));
         return view('back.pages.partnyor.index',compact('partnyors'));
     }
 

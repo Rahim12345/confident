@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Operation;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class StoreKassaRequest extends FormRequest
@@ -24,10 +26,46 @@ class StoreKassaRequest extends FormRequest
      */
     public function rules()
     {
+        $max = 999999999.99;
+        if (request()->operation_id)
+        {
+            $operation = Operation::findOrFail(request()->operation_id);
+            if ($operation->giris_ve_ya_cixis == 2)
+            {
+                $umumi =  DB::select('
+                select
+                sum(pul) as total,
+                giris_ve_ya_cixis
+                from kassas as k
+                left join operations as o on o.id=k.operation_id group by giris_ve_ya_cixis
+                ');
+
+                $totalUmumi = 0;
+                if (count($umumi) == 0)
+                {
+                    $totalUmumi = 0;
+                }
+                elseif (count($umumi) == 1)
+                {
+                    $totalUmumi = $umumi[0]->total;
+                }
+                elseif (count($umumi) == 2)
+                {
+                    $totalUmumi = $umumi[0]->total - $umumi[1]->total;
+                }
+
+                if ($totalUmumi < request()->pul)
+                {
+                    $max = $totalUmumi;
+                }
+            }
+        }
+
+
         $rules = [
             'operation_type'=>['required',Rule::in([1,2,3])],
             'operation_id'=>'required|exists:operations,id',
-            'pul'=>'numeric|between:0.01,999999999.99',
+            'pul'=>'numeric|between:0.01,'.$max,
             'description'=>'nullable|max:60000'
         ];
 

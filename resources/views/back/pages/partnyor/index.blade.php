@@ -19,11 +19,12 @@
                             <tr>
                                 <th>#</th>
                                 <th>Ad</th>
+                                <th>Borc(AZN)</th>
                                 <th class="w-1"></th>
                             </tr>
                             </thead>
                             <tbody>
-                            @if($partnyors->count() == 0)
+                            @if(count($partnyors) == 0)
                                 <tr>
                                     <td colspan="3" align="center">Məlumat tapılmadı</td>
                                 </tr>
@@ -35,6 +36,9 @@
                                 </td>
                                 <td data-label="Ad" >
                                     <div>{{ $item->ad }}</div>
+                                </td>
+                                <td data-label="Borc(AZN)" >
+                                    <div>{{ $item->umumiBorc - $item->verilenBorc }}</div>
                                 </td>
                                 <td>
                                     <div class="btn-list flex-nowrap">
