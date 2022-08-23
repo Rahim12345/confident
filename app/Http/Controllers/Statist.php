@@ -128,13 +128,17 @@ AND YEAR(k.updated_at) = YEAR(CURRENT_DATE())
 //        dd($isciler);
 
         $iscininQazandirdigiPullar = DB::select("
-        SELECT
-            *,
-            (SELECT SUM(`qutu_sayi`*`qutusunun_faktiki_satildigi_qiymet`+`satis_miqdari_ededle`*`bir_ededinin_faktiki_satildigi_qiymeti`) FROM satis_detallaris WHERE satis.id = satis_detallaris.satis_id) as ilkin_odenis_cemi,
-            FROM `users`
-            WHERE `status`=1
-            ORDER BY apul DESC;
+        SELECT  *
+        FROM users
+        LEFT JOIN satis
+        ON users.id = satis.satici_id
+        LEFT JOIN satis_detallaris
+        ON satis_detallaris.satis_id = satis.id;
         ");
+
+
+//        $iscininQazandirdigiPullar = User::withSum('satis.details','`qutu_sayi`*`qutusunun_faktiki_satildigi_qiymet`+`satis_miqdari_ededle`*`bir_ededinin_faktiki_satildigi_qiymeti`')->get();
+
 
 //        dd($iscininQazandirdigiPullar);
 
