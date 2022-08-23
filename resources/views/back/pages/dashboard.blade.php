@@ -97,6 +97,30 @@
                 </div>
             </div>
 
+            <div class="col-md-6">
+                <div class="card" style="height: calc(24rem + 10px)">
+                    <div class="card-body card-body-scrollable card-body-scrollable-shadow">
+                        <div class="divide-y-4">
+                            @foreach($isciler as $isci)
+                                <div onclick="window.location.href='{!! route('back.personala.verdiyim.pullar',$isci->id) !!}'" style="cursor: pointer">
+                                    <div class="row">
+                                        <div class="col-auto">
+                                            <span class="avatar">{{ substr($isci->name,0,2) }}</span>
+                                        </div>
+                                        <div class="col">
+                                            <div class="text-truncate">
+                                                <strong>{{ $isci->name }}</strong> personalına xərclənən pul - {{ $isci->apul ? $isci->apul : 0 }} AZN
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
     </div>

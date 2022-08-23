@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Partnyor;
 use App\Http\Requests\StorePartnyorRequest;
 use App\Http\Requests\UpdatePartnyorRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class PartnyorController extends Controller
@@ -127,5 +128,19 @@ class PartnyorController extends Controller
         toastr()->success('Silindi',env('xitab'));
 
         return redirect()->route('partnyor.index');
+    }
+
+    public function firmalaraVerdiyimPullar($id)
+    {
+        $firma = Partnyor::with('kassa')->findOrFail($id);
+
+        return view('back.pages.partnyor.firmalara-verdiyim-pul',compact('firma'));
+    }
+
+    public function personalaVerdiyimPullar($id)
+    {
+        $personal = User::with('kassa')->where('status',1)->findOrFail($id);
+
+        return view('back.pages.partnyor.personala-verdiyim-pul',compact('personal'));
     }
 }

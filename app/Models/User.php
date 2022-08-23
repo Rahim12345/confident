@@ -70,4 +70,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(HekimVezife::class,'id','hekim_vezife_id');
     }
+
+    public function kassa()
+    {
+        return $this->hasMany(Kassa::class,'relational_id','id')->orderByDesc('id');
+    }
+
+    public function satis()
+    {
+        return $this->hasMany(Satis::class,'satici_id','id');
+    }
 }

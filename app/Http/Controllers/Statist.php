@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -115,7 +116,30 @@ AND YEAR(k.updated_at) = YEAR(CURRENT_DATE())
             $totalBugun = $bugun[0]->total - $bugun[1]->total;
         }
 
-        return view('back.pages.dashboard',compact('totalUmumi','totalAy','totalBugun','bugunkiMusteriAdgunuleri','bugunkiPersonalAdgunuleri','son_musteriler'));
+        $isciler = DB::select("
+        SELECT
+            *,
+            (SELECT SUM(`PUL`) FROM kassas WHERE users.id = kassas.relational_id AND kassas.operation_type=1) as apul
+            FROM `users`
+            WHERE `status`=1
+            ORDER BY apul DESC;
+        ");
+
+//        dd($isciler);
+
+        $iscininQazandirdigiPullar = DB::select("
+        SELECT
+            *,
+            (SELECT SUM(`qutu_sayi`*`qutusunun_faktiki_satildigi_qiymet`+`satis_miqdari_ededle`*`bir_ededinin_faktiki_satildigi_qiymeti`) FROM satis_detallaris WHERE satis.id = satis_detallaris.satis_id) as ilkin_odenis_cemi,
+            FROM `users`
+            WHERE `status`=1
+            ORDER BY apul DESC;
+        ");
+
+//        dd($iscininQazandirdigiPullar);
+
+
+        return view('back.pages.dashboard',compact('totalUmumi','totalAy','totalBugun','bugunkiMusteriAdgunuleri','bugunkiPersonalAdgunuleri','son_musteriler','isciler'));
     }
 
     /**

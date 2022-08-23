@@ -67,6 +67,12 @@ Route::group(['prefix'=>'admin','middleware'=>['auth', 'locale']],function (){
     Route::resource('hekim', HekimController::class);
     Route::resource('isci', IsciController::class);
     Route::resource('partnyor', PartnyorController::class);
+    Route::get('firmalara-verdiyim-pullar/{id}',[PartnyorController::class,'firmalaraVerdiyimPullar'])
+        ->name('back.firmalara.verdiyim.pullar');
+
+    Route::get('personala-verdiyim-pullar/{id}',[PartnyorController::class,'personalaVerdiyimPullar'])
+        ->name('back.personala.verdiyim.pullar');
+
     Route::resource('istehsalci', IstehsalciController::class);
     Route::resource('kateqoriya', KateqoriyaController::class);
     Route::resource('model', MarkaController::class);

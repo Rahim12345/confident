@@ -42,6 +42,9 @@
                                 </td>
                                 <td>
                                     <div class="btn-list flex-nowrap">
+                                        <a href="{{ route('back.firmalara.verdiyim.pullar',$item->id) }}" class="btn btn-info">
+                                            <i class="fa fa-history"></i>
+                                        </a>
                                         <a href="{{ route('partnyor.edit',$item->id) }}" class="btn btn-primary">
                                             <i class="fa fa-pen"></i>
                                         </a>

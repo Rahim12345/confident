@@ -17,4 +17,9 @@ class Partnyor extends Model
     {
         return $this->hasMany(Mehsul::class,'firma_id','id');
     }
+
+    public function kassa()
+    {
+        return $this->hasMany(Kassa::class,'relational_id','id')->orderByDesc('id');
+    }
 }
