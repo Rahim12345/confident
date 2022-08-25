@@ -128,12 +128,8 @@ AND YEAR(k.updated_at) = YEAR(CURRENT_DATE())
 //        dd($isciler);
 
         $iscininQazandirdigiPullar = DB::select("
-        SELECT  *
-        FROM users
-        LEFT JOIN satis
-        ON users.id = satis.satici_id
-        LEFT JOIN satis_detallaris
-        ON satis_detallaris.satis_id = satis.id;
+        select ifnull(sum(sd.`qutu_sayi`*sd.`qutusunun_faktiki_satildigi_qiymet`+sd.`satis_miqdari_ededle`*sd.`bir_ededinin_faktiki_satildigi_qiymeti`),0) as CemiSatis,u.id as user_id,u.name as ad
+from users as u left join satis as s on u.id=s.satici_id left join satis_detallaris as sd on sd.satis_id=s.id where u.status=1  group by u.id order by CemiSatis desc;
         ");
 
 
@@ -141,9 +137,16 @@ AND YEAR(k.updated_at) = YEAR(CURRENT_DATE())
 
 
 //        dd($iscininQazandirdigiPullar);
+        /*
+        select
+sum(sd.`qutu_sayi`*sd.`qutusunun_faktiki_satildigi_qiymet`+sd.`satis_miqdari_ededle`*sd.`bir_ededinin_faktiki_satildigi_qiymeti`) as total,
+u.name as satici
+ from satis_detallaris as sd join satis as s on s.id=sd.satis_id join users as u on u.id=s.satici_id group by u.id;
+ type=1 2 users
+         */
 
 
-        return view('back.pages.dashboard',compact('totalUmumi','totalAy','totalBugun','bugunkiMusteriAdgunuleri','bugunkiPersonalAdgunuleri','son_musteriler','isciler'));
+        return view('back.pages.dashboard',compact('totalUmumi','totalAy','totalBugun','bugunkiMusteriAdgunuleri','bugunkiPersonalAdgunuleri','son_musteriler','isciler','iscininQazandirdigiPullar'));
     }
 
     /**

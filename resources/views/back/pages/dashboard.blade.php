@@ -121,6 +121,31 @@
                 </div>
             </div>
 
+            <div class="col-md-6">
+                <div class="card" style="height: calc(24rem + 10px)">
+                    <div class="card-body card-body-scrollable card-body-scrollable-shadow">
+                        <div class="divide-y-4">
+                            @foreach($iscininQazandirdigiPullar as $iscininQazandirdigiPul)
+                                <div onclick="window.location.href='{!! route('hekim.edit',$iscininQazandirdigiPul->user_id) !!}'" style="cursor: pointer">
+                                    <div class="row">
+                                        <div class="col-auto">
+                                            <span class="avatar">{{ substr($iscininQazandirdigiPul->ad,0,2) }}</span>
+                                        </div>
+                                        <div class="col">
+                                            <div class="text-truncate">
+                                                <strong>{{ $iscininQazandirdigiPul->ad }}</strong> personalı ümumilikdə - {{ $iscininQazandirdigiPul->CemiSatis ? $iscininQazandirdigiPul->CemiSatis : 0 }} AZN-lik
+                                                <br> məhsul satıb
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
     </div>
